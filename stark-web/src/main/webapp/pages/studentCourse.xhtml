@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition template="/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="body">
+
+		<p:panel id="studentCourseTable">
+		 	<p:dataTable var="studentCourse" value="#{studentCourseBean.studentCourses}" rows="5"  
+		 				 emptyMessage="There are no student courses" paginator="true" paginatorPosition="bottom" >  
+	
+		        <p:column filterBy="#{studentCourse.student.name}" filterMatchMode="contains" headerText="Student Name" 
+		        		  sortBy="#{studentCourse.student.name}">  
+		            <h:outputText value="#{studentCourse.student.name}" />  
+		        </p:column>
+		  
+		  		<p:column headerText="Course" sortBy="#{studentCourse.course}" >  
+		            <h:outputText value="#{studentCourse.course.description}" />  
+		        </p:column>
+
+				<p:column headerText="Value" sortBy="#{studentCourse.value}" >  
+		            <h:outputText value="#{studentCourse.valueCourse}" />  
+		        </p:column>
+
+		  		<p:column style="width:22%" headerText="Actions">
+					
+               		<p:commandButton oncomplete="visualizeDialog.show();" icon="visualizeIcon" 
+									 title="visualize" process="@this" update=":formGrid:panelGridDialog">
+               			<f:setPropertyActionListener value="#{studentCourse}" target="#{studentCourseBean.studentCourseViewRemove}" />
+           			</p:commandButton>
+           			
+           			<p:commandButton update=":formGrid:mainPanel" icon="editIcon" actionListener="#{studentCourseBean.prepareEdit}" title="edit"
+           							 process="@this" >
+               			<f:setPropertyActionListener value="#{studentCourse}" target="#{studentCourseBean.studentCourse}" />
+           			</p:commandButton>
+           			
+           			<p:commandButton title="remove" oncomplete="removeStudentCourse.show();" icon="removeIcon"
+           							 process="@this" update=":formGrid:removeStudentCourse">
+               			<f:setPropertyActionListener value="#{studentCourse}" target="#{studentCourseBean.studentCourseViewRemove}" />
+           			</p:commandButton>
+       			</p:column>  
+		  
+		        <f:facet name="footer" >  
+		            There are #{studentCourseBean.studentCourses.size()} student courses
+		        </f:facet>  
+			  
+		    </p:dataTable>
+		</p:panel>
+	
+		<p:panel id="mainPanel" header="Student Course Data">
+  
+			<p:panelGrid columns="2" styleClass="ui-panelGrid-stark" >
+				<p:outputLabel for="student" value="Student" />
+				<p:selectOneMenu id="student" value="#{studentCourseBean.studentCourse.student}" required="true" style="width: 300px !important"
+									 requiredMessage="Student is required" styleClass="ui-selectOneMenu-stark" converter="entityConverter"> 
+						<f:selectItem itemLabel="Select One..." />
+						<f:selectItems value="#{studentCourseBean.students}" itemLabel="#{student.name}" var="student" 
+									   itemValue="#{student}" />
+				</p:selectOneMenu>
+
+				<p:outputLabel for="course" value="Course" />
+				<p:selectOneRadio id="course" value="#{studentCourseBean.studentCourse.course}" converter="entityConverter"
+								  required="true" requiredMessage="Course is required">
+						<f:selectItems value="#{studentCourseBean.courses}" itemLabel="#{course.description}" var="course" 
+									   itemValue="#{course}" />
+				
+				</p:selectOneRadio>
+
+				<p:outputLabel for="value" value="Value"  />
+				<p:inputMask mask="999.99" id="value" size="10" value="#{studentCourseBean.studentCourse.valueCourse}" 
+							 converter="doubleConverter" required="true" requiredMessage="Value is required"/>
+				
+				<p:outputLabel for="paymentDay" value="Payment Day"/>
+				<p:inputText size="3" id="paymentDay" value="#{studentCourseBean.studentCourse.paymentDay}" required="true" 
+							 requiredMessage="Payment Day is required" maxlength="2"/>
+							 
+ 				<p:outputLabel for="registration" value="Registration" />
+				<p:calendar id="registration" value="#{studentCourseBean.studentCourse.registration}" showOn="button" size="7" navigator="true"
+							    required="true" requiredMessage="Registration is required" />
+					
+			</p:panelGrid>
+
+			<p:commandButton icon="saveIcon" actionListener="#{studentCourseBean.save}"
+							 value="#{studentCourseBean.isEditEntity ? 'Update' : 'Save'}" 
+							 update="studentCourseTable :formGrid:growl :formGrid:mainPanel" oncomplete="cleanFields();"/>
+
+			<p:commandButton icon="eraserIcon" value="#{studentCourseBean.isEditEntity ? 'Cancel' : 'Clean'}" 
+							 oncomplete="cleanFields();" />
+		</p:panel>
+
+		<p:confirmDialog id="removeStudentCourse" widgetVar="removeStudentCourse" header="Remove" resizable="false" 
+						 appendToBody="true" message="Remove #{studentCourseBean.studentCourseViewRemove.student.name} ?" >
+
+			<h:panelGrid columns="2">
+				<p:commandButton value="No" oncomplete="removeStudentCourse.hide();" />
+
+				<p:commandButton value="Yes" actionListener="#{studentCourseBean.remove}" immediate="true" process="@this"
+					oncomplete="removeStudentCourse.hide(); cleanFields();" update="studentCourseTable :formGrid:growl :formGrid:mainPanel" />
+			</h:panelGrid>
+		</p:confirmDialog>
+
+		<p:dialog modal="true" widgetVar="visualizeDialog" appendToBody="true" resizable="false" width="700" dynamic="false" >
+
+				<h:panelGrid id="panelGridDialog" columns="2" cellpadding="5">  
+                	<h:outputLabel for="dialogName" value="Name: " />  
+                	<h:outputText id="dialogName" value="#{studentCourseBean.studentCourseViewRemove.student.name}" />
+                	
+                	<h:outputLabel for="dialogCourse" value="Course: " />  
+                	<h:outputText id="dialogCourse" value="#{studentCourseBean.studentCourseViewRemove.course.description}" />
+                	
+                	<h:outputLabel for="dialogValue" value="Value: " />  
+                	<h:outputText id="dialogValue" value="#{studentCourseBean.studentCourseViewRemove.valueCourse}" />
+                	
+                	<h:outputLabel for="dialogPaymentDay" value="Payment Day: " />  
+                	<h:outputText id="dialogPaymentDay" value="#{studentCourseBean.studentCourseViewRemove.paymentDay}" />
+                	
+                	<h:outputLabel for="dialogRegistration" value="Registration Day: " />  
+                	<h:outputText id="dialogRegistration" value="#{studentCourseBean.studentCourseViewRemove.registration}" />
+                </h:panelGrid>
+
+                <p:commandButton title="Close" icon="removeIcon" value="Close" onclick="visualizeDialog.hide()"/>
+		</p:dialog>
+		
+		<p:remoteCommand name="cleanFields" actionListener="#{studentCourseBean.clean}" update="mainPanel" immediate="true" process="@this" />
+		<p:hotkey bind="esc" handler="visualizeDialog.hide(); removeStudentCourse.hide()" />
+	</ui:define>
+</ui:composition>

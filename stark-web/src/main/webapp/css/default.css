@@ -1,0 +1,47 @@
+.removeIcon {
+	background: url(../images/remove.png) 0 0 no-repeat !important;
+}
+
+.saveIcon {
+	background: url(../images/save.png) 0 0 no-repeat !important;
+}
+
+.editIcon {
+	background: url(../images/edit.png) 0 0 no-repeat !important;
+}
+
+.visualizeIcon {
+	background: url(../images/visualize.png) 0 0 no-repeat !important;
+}
+
+.printerIcon {
+	background: url(../images/printer.png) 0 0 no-repeat !important;
+}
+
+.eraserIcon {
+	background: url(../images/eraser.png) 0 0 no-repeat !important;
+}
+
+.ui-icon-alert {
+	background: url(../images/eraser.png) 0 0 no-repeat !important;
+}
+
+.ui-inputText-stark {
+	width: 98%;
+}
+
+.ui-panelGrid-stark {
+	width: 100%;
+}
+
+.ui-selectOneMenu-stark {
+	width: 98%;
+}
+
+RED {
+	background-color: #FF0000;
+}
+
+GREEN {
+	background-color: #00FF00;
+}

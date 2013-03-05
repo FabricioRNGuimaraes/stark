@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition template="/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="body">
+
+		<p:panel id="classRoomTable">
+		 	<p:dataTable var="classRoom" value="#{classRoomBean.classesRoom}" rows="5"  
+		 				 emptyMessage="There are no class room" paginator="true" paginatorPosition="bottom" >  
+	
+		        <p:column filterBy="#{classRoom.description}" filterMatchMode="contains" headerText="Description" sortBy="#{classRoom.description}">  
+		            <h:outputText value="#{classRoom.description}" />  
+		        </p:column>
+
+		  		<p:column style="width:22%" headerText="Actions">
+					
+               		<p:commandButton oncomplete="visualizeDialog.show();" icon="visualizeIcon"
+									 title="visualize" process="@this" update=":formGrid:panelGridDialog">
+               			<f:setPropertyActionListener value="#{classRoom}" target="#{classRoomBean.classRoomViewRemove}" />
+           			</p:commandButton>
+           			
+           			<p:commandButton update=":formGrid:mainPanel" icon="editIcon" actionListener="#{classRoomBean.prepareEdit}" title="edit"
+           							 process="@this" >
+               			<f:setPropertyActionListener value="#{classRoom}" target="#{classRoomBean.classRoom}" />
+           			</p:commandButton>
+           			
+           			<p:commandButton title="remove" oncomplete="removeClassRoom.show();" icon="removeIcon"
+           							 process="@this" update=":formGrid:removeClassRoom">
+               			<f:setPropertyActionListener value="#{classRoom}" target="#{classRoomBean.classRoomViewRemove}" />
+           			</p:commandButton>
+       			</p:column>  
+		  
+		        <f:facet name="footer" >  
+		            There are #{classRoomBean.classesRoom.size()} classes room
+		        </f:facet>  
+			  
+		    </p:dataTable>
+		</p:panel>
+	
+		<p:panel id="mainPanel" header="Class Room Data" >
+  
+			<p:panelGrid columns="2" styleClass="ui-panelGrid-stark" >
+
+				<p:outputLabel for="description" value="Description"  />
+				<p:inputText id="description" value="#{classRoomBean.classRoom.description}" required="true"
+							 requiredMessage="Description is required" styleClass="ui-inputText-stark" maxlength="50" />
+							 
+ 				<p:outputLabel for="color" value="Color"  />
+				<p:inputText id="color" value="#{classRoomBean.classRoom.color}" styleClass="ui-inputText-stark" maxlength="10" />
+			</p:panelGrid>
+			
+			<p:commandButton actionListener="#{classRoomBean.save}" value="#{classRoomBean.isEditEntity ? 'Update' : 'Save'}"
+							 update="classRoomTable :formGrid:growl :formGrid:mainPanel" oncomplete="cleanFields();"
+							 icon="saveIcon" />
+			<p:commandButton icon="eraserIcon" value="#{classRoomBean.isEditEntity ? 'Cancel' : 'Clean'}" oncomplete="cleanFields();"  />
+		</p:panel>
+
+		<p:confirmDialog id="removeClassRoom" widgetVar="removeClassRoom" message="Remove #{classRoomBean.classRoomViewRemove.description} ?" 
+						 resizable="false" appendToBody="true" header="Remove">
+
+			<h:panelGrid columns="2">
+				<p:commandButton value="No" oncomplete="removeClassRoom.hide();" />
+
+				<p:commandButton value="Yes" actionListener="#{classRoomBean.remove}" immediate="true" process="@this"
+					oncomplete="removeClassRoom.hide(); cleanFields();" update="classRoomTable :formGrid:growl :formGrid:mainPanel" />
+			</h:panelGrid>
+		</p:confirmDialog>
+
+		<p:dialog modal="true" widgetVar="visualizeDialog" appendToBody="true" resizable="false" width="700"  >
+			<h:panelGrid id="panelGridDialog" columns="2" cellpadding="5">  
+               	<h:outputLabel for="dialogDescription" value="Description: " />  
+               	<h:outputText id="dialogDescription" value="#{classRoomBean.classRoomViewRemove.description}" />
+
+               	<h:outputLabel for="dialogColor" value="Color: " />  
+               	<h:outputText id="dialogColor" value="#{classRoomBean.classRoomViewRemove.color}" />
+            </h:panelGrid>
+
+               <p:commandButton title="Close" icon="removeIcon" value="Close" onclick="visualizeDialog.hide()"/>
+		</p:dialog>
+
+		<p:remoteCommand name="cleanFields" actionListener="#{classRoomBean.clean}" update="mainPanel" immediate="true" process="@this"/>
+		<p:hotkey bind="esc" handler="visualizeDialog.hide(); removeClassRoom.hide()" />
+	</ui:define>
+</ui:composition>

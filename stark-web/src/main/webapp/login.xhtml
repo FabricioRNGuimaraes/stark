@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" >
+
+	<f:view contentType="text/html">
+		<h:head>
+			<meta content="text/html; charset=UTF-8" http-equiv="Content-Type"></meta>
+			<title>
+				Welcome to Stark
+			</title>
+		</h:head>
+					
+		<h:body>
+		
+			<p:layout fullPage="true" >
+				<p:layoutUnit position="center" >
+					<h:form id="formCenterLogin">
+					<p:growl id="growlLogin" showDetail="false" sticky="false" showSummary="true" life="5000" />
+						<p:panel>
+							<p:panelGrid columns="2" id="panelLogin">
+								<p:outputLabel for="login" value="Login:" />
+								<p:inputText id="login" value="#{authenticationBean.login}" />
+								<p:outputLabel for="password" value="Password:" />
+								<p:password id="password" value="#{authenticationBean.password}" />
+								<p:commandButton value="login" action="#{authenticationBean.login}" 
+											update=":formCenterLogin:growlLogin" />
+							</p:panelGrid>
+						</p:panel>
+					</h:form>
+				</p:layoutUnit>
+			</p:layout>
+		</h:body>
+	</f:view>
+</html>

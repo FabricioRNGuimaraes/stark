@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition template="/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="body">
+
+		<p:panel id="panelSchedule">
+			<p:schedule id="schedule" allDaySlot="false" view="agendaWeek" showWeekends="false" minTime="7" value="#{scheduleBean.scheduleModel}"
+						maxTime="21" slotMinutes="30" >
+				 <p:ajax event="dateSelect" listener="#{scheduleBean.onDateSelect}" oncomplete="eventDialog.show()" 
+				 		 update="eventDialog"/>
+				 <p:ajax event="eventSelect"  listener="#{scheduleBean.onEventSelect}" oncomplete="eventDialog.show()" />
+			</p:schedule>
+		</p:panel>
+
+		<p:dialog modal="true" widgetVar="eventDialog" appendToBody="true" resizable="false" width="700" dynamic="false" 
+				  header="#{scheduleModel.eventDate.day}" id="eventDialog">
+
+			<h:panelGrid id="panelGridDialog" columns="2" cellpadding="5">
+			 	<p:outputLabel for="students" value="Students"  />
+               	<p:pickList id="students" value="#{scheduleBean.students}" var="student" itemLabel="#{student.name}" itemValue="#{student}" 
+               				converter="entityConverter"/>
+               	
+               	<p:outputLabel for="teachers" value="Teachers"  />
+               	<p:pickList id="teachers" value="#{scheduleBean.teachers}" var="teacher" itemLabel="#{teacher.name}" itemValue="#{teacher}" 
+               				converter="entityConverter" />
+               	
+               	<p:outputLabel for="classRoom" value="Class Room"  />
+       			<p:selectOneRadio id="classRoom" value="#{scheduleBean.classRoom}" converter="entityConverter">
+						<f:selectItems value="#{scheduleBean.classRooms}" itemLabel="#{classRoom.description}" var="classRoom" 
+									   itemValue="#{classRoom}" />
+       			</p:selectOneRadio>
+       			
+       			<p:outputLabel for="eventDate" value="Event Date"  />
+       			<p:calendar id="eventDate" value="#{scheduleModel.eventDate}"/>
+       			
+       			<p:commandButton title="Close" icon="removeIcon" value="Close" onclick="eventDialog.hide()"/>
+       			<p:commandButton icon="saveIcon" actionListener="#{scheduleBean.save}" value="Save"
+							 update=":formGrid:growl" oncomplete="eventDialog.hide()"/>
+			</h:panelGrid>	
+		</p:dialog>
+		<p:hotkey bind="esc" handler="eventDialog.hide()" />
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition template="/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="body">
+
+		<p:panel id="teacherTable">
+		 	<p:dataTable var="teacher" value="#{teacherBean.teachers}" rows="5"  
+		 				 emptyMessage="There are no teachers" paginator="true" paginatorPosition="bottom" >  
+	
+		        <p:column filterBy="#{teacher.name}" filterMatchMode="contains" headerText="Name" sortBy="#{teacher.name}">  
+		            <h:outputText value="#{teacher.name}" />  
+		        </p:column>
+		  
+		  		<p:column filterBy="#{teacher.cpf}" filterMatchMode="contains" headerText="CPF" sortBy="#{teacher.cpf}" >  
+		            <h:outputText value="#{teacher.cpf}" converter="cpfConverter" />  
+		        </p:column>
+
+		  		<p:column style="width:22%" headerText="Actions">
+					
+               		<p:commandButton oncomplete="visualizeDialog.show();" icon="visualizeIcon" 
+									 title="visualize" process="@this" update=":formGrid:panelGridDialog">
+               			<f:setPropertyActionListener value="#{teacher}" target="#{teacherBean.teacherViewRemove}" />
+           			</p:commandButton>
+           			
+           			<p:commandButton update=":formGrid:mainPanel" icon="editIcon" actionListener="#{teacherBean.prepareEdit}" title="edit"
+           							 process="@this" >
+               			<f:setPropertyActionListener value="#{teacher}" target="#{teacherBean.teacher}" />
+           			</p:commandButton>
+           			
+           			<p:commandButton title="remove" oncomplete="removeTeacher.show();" icon="removeIcon"
+           							 process="@this" update=":formGrid:removeTeacher">
+               			<f:setPropertyActionListener value="#{teacher}" target="#{teacherBean.teacherViewRemove}" />
+           			</p:commandButton>
+       			</p:column>  
+		  
+		        <f:facet name="footer" >  
+		            There are #{teacherBean.teachers.size()} teachers
+		        </f:facet>  
+			  
+		    </p:dataTable>
+		</p:panel>
+	
+		<p:panel id="mainPanel" header="Teacher Data">
+  
+			<p:panelGrid columns="2" styleClass="ui-panelGrid-stark" >
+				<p:outputLabel for="name" value="Name" />
+				<p:inputText id="name" value="#{teacherBean.teacher.name}" required="true"
+							 requiredMessage="Name is required" maxlength="100" styleClass="ui-inputText-stark" />
+
+				<p:outputLabel for="email" value="Email"  />
+				<p:inputText id="email" value="#{teacherBean.teacher.email}" validatorMessage="Invalid e-mail format"
+							 maxlength="50" styleClass="ui-inputText-stark" >
+					 <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+				 </p:inputText>
+
+				<p:outputLabel for="cpf" value="CPF"  />
+				<p:inputMask mask="999.999.999-99" id="cpf" size="12" value="#{teacherBean.teacher.cpf}" converter="cpfConverter" />
+							
+				<h:outputLabel for="phone" value="Phone " />  
+				<p:inputMask mask="(99)9999-9999" id="phone" value="#{teacherBean.teacher.phone}" converter="phoneConverter"
+							 size="12"/>
+                	 
+				<p:outputLabel for="addressStreet" value="Street"  />
+				<p:inputText id="addressStreet" value="#{teacherBean.teacher.address.street}"
+							 maxlength="50" styleClass="ui-inputText-stark" />
+                
+                <p:outputLabel for="addressNeighborhood" value="Neighborhood"  />
+				<p:inputText id="addressNeighborhood" value="#{teacherBean.teacher.address.neighborhood}" 
+							 maxlength="50" styleClass="ui-inputText-stark" />
+				
+				<p:outputLabel for="addressNumber" value="Number"  />
+				<p:inputText id="addressNumber" value="#{teacherBean.teacher.address.number}" 
+							onkeydown="return forceInteger(event);" maxlength="5" styleClass="ui-inputText-stark" />
+				
+                <p:outputLabel for="addressComplement" value="Complement"  />
+				<p:inputTextarea id="addressComplement" value="#{teacherBean.teacher.address.complement}" 
+								autoResize="false" maxlength="100" styleClass="ui-inputText-stark" />
+                	 	 
+			</p:panelGrid>
+
+			<p:commandButton icon="saveIcon" actionListener="#{teacherBean.save}"
+							 value="#{teacherBean.isEditEntity ? 'Update' : 'Save'}"
+							 update="teacherTable :formGrid:growl :formGrid:mainPanel" oncomplete="cleanFields();"/>
+
+			<p:commandButton icon="eraserIcon" value="#{teacherBean.isEditEntity ? 'Cancel' : 'Clean'}" 
+							 oncomplete="cleanFields();" />
+		</p:panel>
+
+		<p:confirmDialog id="removeTeacher" widgetVar="removeTeacher" header="Remove" resizable="false" 
+						 appendToBody="true" message="Remove #{teacherBean.teacherViewRemove.name} ?" >
+
+			<h:panelGrid columns="2">
+				<p:commandButton value="No" oncomplete="removeTeacher.hide();" />
+
+				<p:commandButton value="Yes" actionListener="#{teacherBean.remove}" immediate="true" process="@this"
+					oncomplete="removeTeacher.hide(); cleanFields();" update="teacherTable :formGrid:growl :formGrid:mainPanel" />
+			</h:panelGrid>
+		</p:confirmDialog>
+
+		<p:dialog modal="true" widgetVar="visualizeDialog" appendToBody="true" resizable="false" width="700" dynamic="false" >
+
+				<h:panelGrid id="panelGridDialog" columns="2" cellpadding="5">  
+                	<h:outputLabel for="dialogName" value="Name: " />  
+                	<h:outputText id="dialogName" value="#{teacherBean.teacherViewRemove.name}" />
+                	
+                	<h:outputLabel for="dialogEmail" value="Email: " />  
+                	<h:outputText id="dialogEmail" value="#{teacherBean.teacherViewRemove.email}" />
+                	
+                	<h:outputLabel for="dialogCpf" value="CPF: " />  
+                	<h:outputText id="dialogCpf" value="#{teacherBean.teacherViewRemove.cpf}" converter="cpfConverter"/>
+                	
+                	<h:outputLabel for="dialogPhone" value="Phone: " />  
+                	<h:outputText id="dialogPhone" value="#{teacherBean.teacherViewRemove.phone}" converter="phoneConverter"/>
+               
+					<h:outputLabel for="dialogAddressStreet" value="Street: " />  
+                	<h:outputText id="dialogAddressStreet" value="#{teacherBean.teacherViewRemove.address.street}" />
+                	
+                	<h:outputLabel for="dialogAddressNeighborhood" value="Neighborhood: " />  
+                	<h:outputText id="dialogAddressNeighborhood" value="#{teacherBean.teacherViewRemove.address.neighborhood}" />
+                	
+                	<h:outputLabel for="dialogAddressNumber" value="Number: " />  
+                	<h:outputText id="dialogAddressNumber" value="#{teacherBean.teacherViewRemove.address.number}" />
+                	
+                	<h:outputLabel for="dialogAddressComplement" value="Complement: " />  
+                	<h:outputText id="dialogAddressComplement" value="#{teacherBean.teacherViewRemove.address.complement}" />
+                </h:panelGrid>
+
+                <p:commandButton title="Close" icon="removeIcon" value="Close" onclick="visualizeDialog.hide()"/>
+		</p:dialog>
+		
+		<p:remoteCommand name="cleanFields" actionListener="#{teacherBean.clean}" update="mainPanel" immediate="true" process="@this" />
+		<p:hotkey bind="esc" handler="visualizeDialog.hide(); removeTeacher.hide()" />
+	</ui:define>
+</ui:composition>

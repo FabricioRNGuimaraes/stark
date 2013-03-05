@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition template="/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="body">
+	
+		<p:tabView id="tabViewItem">
+		
+			<p:ajax event="tabChange" listener="#{itemBean.onTabChange}" />
+		
+			<p:tab title="Item Costs">
+
+				<p:panel id="itemCostTable">
+				 	<p:dataTable var="itemBought" value="#{itemBean.itensBought}" rows="3"  
+				 				 emptyMessage="There are no itens" paginator="true" paginatorPosition="bottom" >  
+			
+				        <p:column filterBy="#{itemBought.item.description}" filterMatchMode="contains" headerText="Description">  
+				            <h:outputText value="#{itemBought.item.description}" />  
+				        </p:column>
+				  
+				  		<p:column headerText="Unity Value">
+				  			<h:outputText value="#{itemBought.value}" />
+				        </p:column>
+				  
+				  		<p:column headerText="Quantity">
+				  			<h:outputText value="#{itemBought.quantity}" />
+				        </p:column>
+				  
+				  		<p:column style="width:22%" headerText="Actions">
+
+		               		<p:commandButton oncomplete="visualizeDialog.show();" icon="visualizeIcon"  
+ 									 title="visualize" process="@this" update=":formGrid:tabViewItem:mainPanelItemCost" >
+		               			<f:setPropertyActionListener value="#{itemBought}" target="#{itemBean.itemBought}" />
+		           			</p:commandButton>
+		           			
+		           			<p:commandButton update=":formGrid:tabViewItem:mainPanelItemCost" icon="editIcon" 
+		           							 actionListener="#{itemBean.prepareEditprepareViewItemBought}"
+		           							 title="edit" process="@this" >
+		               			<f:setPropertyActionListener value="#{itemBought}" target="#{itemBean.itemBought}" />
+		           			</p:commandButton>
+		           			
+		           			<p:commandButton title="remove" oncomplete="removeItemCost.show();" icon="removeIcon"
+		           							 process="@this">
+		               			<f:setPropertyActionListener value="#{itemBought}" target="#{itemBean.itemBoughtprepareViewItemBought}" />
+		           			</p:commandButton>
+		       			</p:column>  
+				  
+				        <f:facet name="footer" >  
+				            There are #{itemBean.itensBought.size()} values.	  
+				        </f:facet>  
+					  
+				    </p:dataTable>
+				</p:panel>
+		
+				<p:panel id="mainPanelItemCost" header="Item Cost" >
+		  
+					<p:panelGrid columns="2" styleClass="ui-panelGrid-stark" >
+						<p:outputLabel for="item" value="Item"  />
+						<p:selectOneMenu id="item" value="#{itemBean.itemBought.item}" required="true" style="width: 300px !important"
+										 requiredMessage="Item is required" styleClass="ui-selectOneMenu-stark" converter="entityConverter"> 
+							<f:selectItem itemLabel="Select One..." />
+							<f:selectItems value="#{itemBean.itens}" itemLabel="#{item.description}" var="item" itemValue="#{item}" />
+						</p:selectOneMenu>
+		
+						<p:outputLabel for="value" value="Value" />
+						<p:inputMask mask="999.99" id="value" value="#{itemBean.itemBought.value}" converter="doubleConverter"  
+									 style="width: 80px !important"
+								     styleClass="ui-inputText-stark" required="true" requiredMessage="Value is required"/>
+		
+						<p:outputLabel for="quantity" value="Quantity" />
+						<p:inputText id="quantity" value="#{itemBean.itemBought.quantity}" maxlength="6"
+									 onkeydown="return forceInteger(event);" styleClass="ui-inputText-stark" 
+									 required="true" style="width: 80px !important"
+									 requiredMessage="Quantity is required"	 />
+		
+						<p:outputLabel for="dayBought" value="Day Bought" />
+						<p:calendar id="dayBought" value="#{itemBean.itemBought.dayBought}" showOn="button" size="7" navigator="true"
+								    required="true" requiredMessage="Day Bought is required" />
+					</p:panelGrid>
+
+					<p:commandButton actionListener="#{itemBean.saveItemBought}" 
+								     value="#{itemBean.isEditEntityItemBought ? 'Update' : 'Save'}"
+									 update="itemCostTable :formGrid:growl :formGrid:tabViewItem:mainPanelItemCost"
+									 oncomplete="cleanFieldsItemCost();"
+									 process="@parent"/>
+									 
+					<p:commandButton value="#{itemBean.isEditEntityItemBought ? 'Cancel' : 'Clean'}" 
+									 oncomplete="cleanFieldsItemCost();"
+									 process="@parent, @this"  />
+				</p:panel>
+		
+				<p:confirmDialog id="removeItemCost" widgetVar="removeItemCost" header="Remove" resizable="false" 
+								 appendToBody="true" message="Remove #{itemBean.itemBought.item.description} ?" >
+		
+					<h:panelGrid columns="2">
+						<p:commandButton value="No" oncomplete="removeItemCost.hide();" />
+		
+						<p:commandButton value="Yes" actionListener="#{itemBean.remove}" immediate="true" process="@this"
+							oncomplete="removeItemCost.hide(); cleanFieldsItemCost();"
+							update="itemCostTable :formGrid:growl :formGrid:tabViewItem:mainPanelItemCost" />
+					</h:panelGrid>
+				</p:confirmDialog>
+		
+				<p:dialog modal="true" widgetVar="visualizeDialogItemCost" appendToBody="true" resizable="false" width="700" dynamic="false" >
+		
+						<h:panelGrid id="panelGridDialogItemCost" columns="2" cellpadding="5">  
+		                	<h:outputLabel for="dialogItemCostItem" value="Item: " />  
+		                	<h:outputText id="dialogItemCostItem" value="#{itemBean.itemBought.item.description}" />
+		                	
+		                	<h:outputLabel for="dialogItemCostValue" value="Value: " />  
+		                	<h:outputText id="dialogItemCostValue" value="#{itemBean.itemBought.value}" />
+		                	
+		                	<h:outputLabel for="dialogItemCostQuantity" value="Quantity: " />  
+		                	<h:outputText id="dialogItemCostQuantity" value="#{itemBean.itemBought.quantity}" />
+		                	
+		                	<h:outputLabel for="dialogItemCostDataBought" value="Data bought: " />  
+		                	<h:outputText id="dialogItemCostDataBought" value="#{itemBean.itemBought.dayBought}" />
+		                </h:panelGrid>
+		
+		                <p:commandButton title="Close" icon="removeIcon" value="Close" onclick="visualizeDialogItemCost.hide()"/>
+				</p:dialog>
+				
+			</p:tab>
+		
+			<p:tab title="Item Registration">
+
+				<p:panel id="itemRegistrationTable">
+				 	<p:dataTable var="item" value="#{itemBean.itens}" rows="5"  
+				 				 emptyMessage="There are no itens" paginator="true" paginatorPosition="bottom" >  
+			
+				        <p:column filterBy="#{item.description}" filterMatchMode="contains" headerText="Description">  
+				            <h:outputText value="#{item.description}" />  
+				        </p:column>
+				  
+				  		<p:column style="width:22%" headerText="Actions">
+							
+			              		<p:commandButton update=":formGrid:tabViewItem:panelGridDialog" icon="visualizeIcon" 
+			              						 title="visualize" process="@this" oncomplete="visualizeDialog.show();">
+			              			<f:setPropertyActionListener value="#{item}" target="#{itemBean.item}" />
+			          			</p:commandButton>
+			          			
+			          			<p:commandButton update=":formGrid:tabViewItem:mainPanelItem" icon="editIcon"  
+			          							 title="edit" process="@this" actionListener="#{itemBean.prepareEdit}" >
+			              			<f:setPropertyActionListener value="#{item}" target="#{itemBean.item}" />
+			          			</p:commandButton>
+			          			
+			          			<p:commandButton title="remove" oncomplete="removeItem.show();" icon="removeIcon"
+			          							 process="@this">
+			              			<f:setPropertyActionListener value="#{item}" target="#{itemBean.item}" />
+			          			</p:commandButton>
+			      			</p:column>  
+				  
+				        <f:facet name="footer" >  
+				            There are #{itemBean.itens.size()} itens.	  
+				        </f:facet>  
+					  
+				    </p:dataTable>
+				</p:panel>
+				
+				<p:panel id="mainPanelItem" header="Item Data" >
+			 
+					<p:panelGrid columns="2" styleClass="ui-panelGrid-stark" >
+						<p:outputLabel for="description" value="Description"  />
+						<p:inputText id="description" value="#{itemBean.item.description}" maxlength="100" 
+									 required="true" requiredMessage="Description is required" styleClass="ui-inputText-stark"/>
+					</p:panelGrid>
+					
+					<p:commandButton actionListener="#{itemBean.save}" value="#{itemBean.isEditEntity ? 'Update' : 'Save'}" 
+									 icon="saveIcon" process="@parent"
+									 update="itemRegistrationTable :formGrid:growl :formGrid:tabViewItem:mainPanelItem" oncomplete="cleanFields();" />
+									 
+					<p:commandButton value="#{itemBean.isEditEntity ? 'Cancel' : 'Clean'}" onclick="cleanFields();" 
+									 icon="eraserIcon" />
+				</p:panel>
+			
+				<p:confirmDialog widgetVar="removeItem" message="Remove #{itemBean.item.description} ?" resizable="false" header="Remove"
+								 appendToBody="true" modal="true" >
+			
+					<h:panelGrid columns="2">
+						<p:commandButton value="No" oncomplete="removeItem.hide();" />
+			
+						<p:commandButton value="Yes" actionListener="#{itemBean.remove}" immediate="true" process="@this"
+							oncomplete="removeItem.hide(); cleanFields();" 
+							update="itemRegistrationTable :formGrid:growl :formGrid:tabViewItem:mainPanelItem" />
+					</h:panelGrid>
+				</p:confirmDialog>
+			
+				<p:dialog modal="true" widgetVar="visualizeDialog" appendToBody="true" resizable="false" width="700" >
+			
+					<h:panelGrid id="panelGridDialog" columns="2" cellpadding="5">  
+			         	<h:outputLabel for="dialogDescription" value="Description: " />  
+			         	<h:outputText id="dialogDescription" value="#{itemBean.item.description}" />
+			        </h:panelGrid>
+			
+			        <p:commandButton title="Close" icon="removeIcon" value="Close" onclick="visualizeDialog.hide()"/>
+				</p:dialog>
+				<p:remoteCommand name="cleanFields" actionListener="#{itemBean.clean}" update=":formGrid:tabViewItem:mainPanelItem" />
+			</p:tab>
+		</p:tabView>
+		
+		<p:hotkey bind="esc" handler="visualizeDialog.hide(); removeItem.hide(); visualizeDialogItemCost.hide(); removeItemCost.hide();" />
+		
+		<p:remoteCommand name="cleanFieldsItemCost" actionListener="#{itemBean.cleanItemBought}" update=":formGrid:tabViewItem:mainPanelItemCost" />
+	</ui:define>
+</ui:composition>
