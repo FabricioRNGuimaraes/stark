@@ -20,7 +20,7 @@ public class Item extends AbstractEntity {
 	@SequenceGenerator(name = "SEQ_ITEM", sequenceName = "SEQ_ITEM", allocationSize=1)
 	private Integer id;
 	
-	@Column(name="description", nullable=false, length=100)
+	@Column(name="description", nullable=false, length=50)
 	private String description;
 
 	public Integer getId() {

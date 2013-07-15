@@ -22,9 +22,6 @@
 		<property name="maxPoolSize" value="10" />
 		<property name="checkoutTimeout" value="180" />
 		<property name="idleConnectionTestPeriod" value="180" />
-<!-- 		<property name="acquireIncrement" value="${database.acquireIncrement}" /> -->
-<!-- 		<property name="maxStatements" value="${database.maxStatements}" /> -->
-<!-- 		<property name="numHelperThreads" value="${database.numHelperThreads}" /> -->
 	</bean>
 
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
@@ -43,31 +40,4 @@
 			</bean>
 		</property>
 	</bean>
-	
-<!-- 	<bean id="validatorFactory" class="javax.validation.Validation" -->
-<!--         factory-method="buildDefaultValidatorFactory" /> -->
-
-<!--     <bean id="validator" factory-bean="validatorFactory" -->
-<!--         factory-method="getValidator" /> -->
-	
-	<!-- Exception translation bean post processor -->
-<!-- 	<bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" /> -->
-	
-<!-- 	<bean class="br.ufla.lemaf.agendatrabalho.service.AgendaTrabalhoService" /> -->
-	
-<!-- 	Configurações para uso da biblioteca de tramitação -->
-<!-- 	<bean class="br.ufla.lemaf.tramitacao.service.TramitacaoService" /> -->
-	
-<!-- 	<bean class="br.ufla.lemaf.tramitacao.jpa.repository.AcaoDisponivelObjetoTramitavelRepository"> -->
-<!-- 		<property name = "entityManagerFactory" ref="entityManagerFactory"/> -->
-<!-- 	</bean> -->
-	
-<!-- 	<bean class="br.ufla.lemaf.tramitacao.jpa.repository.ResumoObjetoTramitavelRepository"> -->
-<!-- 		<property name = "entityManagerFactory" ref="entityManagerFactory"/> -->
-<!-- 	</bean> -->
-	
-<!-- 	<bean class="br.ufla.lemaf.tramitacao.jpa.repository.HistoricoObjetoTramitavelRepository"> -->
-<!-- 		<property name = "entityManagerFactory" ref="entityManagerFactory"/> -->
-<!-- 	</bean> -->
-
 </beans>

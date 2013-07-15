@@ -1,15 +1,15 @@
 package stark.bean;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 
-import stark.dao.TeacherDAO;
 import stark.entity.Address;
 import stark.entity.Teacher;
+import stark.service.ITeacherService;
+import stark.service.impl.TeacherServiceImpl;
 
 @ManagedBean(name="teacherBean")
 @ViewScoped
@@ -17,42 +17,41 @@ public class TeacherBean extends AbstractBean {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<Teacher> teachers = new ArrayList<Teacher>();
+	private List<Teacher> teachers;
 	private Teacher teacher = new Teacher();
-	private Teacher teacherViewRemove;
 	
-	private TeacherDAO dao;
+	private Boolean newEntity = false;
 	
-	private Boolean isEditEntity = false;
+//	@ManagedProperty(value="#{teacherService}")
+	private ITeacherService teacherService;
 	
 	public void initialize() {
 		
-		dao = new TeacherDAO();
-		teachers = dao.findAll();
 		createTeacherAddress();
+		teacherService = new TeacherServiceImpl(); 
+		teachers = teacherService.findAll();
 	}
 
 	public void save(ActionEvent event) {
 
-		teacher.setActive(Boolean.TRUE);
-		if(!isEditEntity && teacher.getId() == null) {
+		if(!newEntity && teacher.getId() == null) {
 
+			teacherService.save(teacher);
 			addInfoGrowlMessage("Teacher " + teacher.getName() + " saved!");
-			dao.save(teacher);
-			teachers = dao.findAll();
 		} else {
-			
+			teacherService.update(teacher);
 			addInfoGrowlMessage("Teacher " + teacher.getName() + " updated!");
-			dao.update(teacher);
 		}
+
+		teachers = teacherService.findAll();
 	}
 	
 	public void remove(ActionEvent event) {
 		
-		teacherViewRemove.setActive(Boolean.FALSE);
-		dao.update(teacherViewRemove);
-		teachers = dao.findAll();
-		addInfoGrowlMessage("Teacher " + teacherViewRemove.getName() + " removed!");
+		teacherService.remove(teacher);
+		teachers = teacherService.findAll();
+
+		addInfoGrowlMessage("Teacher " + teacher.getName() + " removed!");
 	}
 	
 	public void clean(ActionEvent ev) {
@@ -63,7 +62,7 @@ public class TeacherBean extends AbstractBean {
 		
 		teacher = new Teacher();
 		createTeacherAddress();
-		isEditEntity = false;
+		newEntity = false;
 	}
 	
 	private void createTeacherAddress() {
@@ -72,7 +71,7 @@ public class TeacherBean extends AbstractBean {
 	
 	public void prepareEdit() {
 		
-		isEditEntity = true;
+		newEntity = true;
 	}
 
 	public List<Teacher> getTeachers() {
@@ -91,19 +90,12 @@ public class TeacherBean extends AbstractBean {
 		this.teacher = teacher;
 	}
 
-	public Boolean getIsEditEntity() {
-		return isEditEntity;
+	public Boolean getNewEntity() {
+		return newEntity;
 	}
 
-	public void setIsEditEntity(Boolean isEditEntity) {
-		this.isEditEntity = isEditEntity;
+	public void setNewEntity(Boolean newEntity) {
+		this.newEntity = newEntity;
 	}
 
-	public Teacher getTeacherViewRemove() {
-		return teacherViewRemove;
-	}
-
-	public void setTeacherViewRemove(Teacher teacherViewRemove) {
-		this.teacherViewRemove = teacherViewRemove;
-	}
 }

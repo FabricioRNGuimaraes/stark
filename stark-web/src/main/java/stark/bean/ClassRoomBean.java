@@ -7,10 +7,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 
-import stark.dao.ClassRoomDAO;
-import stark.dao.CourseDAO;
 import stark.entity.ClassRoom;
-import stark.entity.Course;
+import stark.service.IClassRoomService;
+import stark.service.impl.ClassRoomServiceImpl;
 
 @ManagedBean(name="classRoomBean")
 @ViewScoped
@@ -18,40 +17,36 @@ public class ClassRoomBean extends AbstractBean {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<ClassRoom> classesRoom = new ArrayList<ClassRoom>();
+	private List<ClassRoom> classRooms = new ArrayList<ClassRoom>();
 	private ClassRoom classRoom = new ClassRoom();
-	private ClassRoom classRoomViewRemove;
+	private Boolean newEntity = false;
 	
-	private ClassRoomDAO dao;
-	
-	private Boolean isEditEntity = false;
+	private IClassRoomService classRoomService;
 	
 	public void initialize() {
 
-		dao = new ClassRoomDAO();
-		classesRoom = dao.findAll();
+		classRoomService = new ClassRoomServiceImpl();
+		classRooms = classRoomService.findAll();
 	}
 
 	public void save(ActionEvent event) {
 
-		classRoom.setActive(Boolean.TRUE);
-		if(!isEditEntity && classRoom.getId() == null) {
+		if(!newEntity && classRoom.getId() == null) {
 			addInfoGrowlMessage("Class Room " + classRoom.getDescription() + " saved!");
-			dao.save(classRoom);
-			classesRoom = dao.findAll();
+			classRoomService.save(classRoom);
 		} else {
 			
 			addInfoGrowlMessage("Class Room " + classRoom.getDescription() + " updated!");
-			dao.update(classRoom);
+			classRoomService.update(classRoom);
 		}
+		classRooms = classRoomService.findAll();
 	}
 	
 	public void remove(ActionEvent event) {
 		
-		classRoomViewRemove.setActive(Boolean.FALSE);
-		dao.update(classRoomViewRemove);
-		classesRoom = dao.findAll();
-		addInfoGrowlMessage("Class Room " + classRoomViewRemove.getDescription() + " deactivated!");
+		classRoomService.remove(classRoom);
+		classRooms = classRoomService.findAll();
+		addInfoGrowlMessage("Class Room " + classRoom.getDescription() + " deactivated!");
 	}
 	
 	public void clean(ActionEvent ev) {
@@ -61,20 +56,20 @@ public class ClassRoomBean extends AbstractBean {
 	private void clean() {
 		
 		classRoom = new ClassRoom();
-		isEditEntity = false;
+		newEntity = false;
 	}
 	
 	public void prepareEdit() {
 		
-		isEditEntity = true;
+		newEntity = true;
 	}
 
 	public List<ClassRoom> getClassesRoom() {
-		return classesRoom;
+		return classRooms;
 	}
 
 	public void setClassesRoom(List<ClassRoom> classesRoom) {
-		this.classesRoom = classesRoom;
+		this.classRooms = classesRoom;
 	}
 
 	public ClassRoom getClassRoom() {
@@ -85,20 +80,20 @@ public class ClassRoomBean extends AbstractBean {
 		this.classRoom = classRoom;
 	}
 
-	public ClassRoom getClassRoomViewRemove() {
-		return classRoomViewRemove;
+	public Boolean getNewEntity() {
+		return newEntity;
 	}
 
-	public void setClassRoomViewRemove(ClassRoom classRoomViewRemove) {
-		this.classRoomViewRemove = classRoomViewRemove;
+	public void setNewEntity(Boolean newEntity) {
+		this.newEntity = newEntity;
 	}
 
-	public Boolean getIsEditEntity() {
-		return isEditEntity;
+	public List<ClassRoom> getClassRooms() {
+		return classRooms;
 	}
 
-	public void setIsEditEntity(Boolean isEditEntity) {
-		this.isEditEntity = isEditEntity;
+	public void setClassRooms(List<ClassRoom> classRooms) {
+		this.classRooms = classRooms;
 	}
 
 }

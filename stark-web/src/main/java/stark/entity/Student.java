@@ -34,8 +34,8 @@ public class Student extends AbstractEntity {
 
 //	@DateTimeFormat(style = "S-")
 //	@Temporal(TemporalType.DATE)
-//	@Column(name="dt_register", nullable=false)
-//	private Date dtRegister;
+	@Column(name="dt_register", nullable=false)
+	private Date dtRegister;
 	
 	@Column(name="cpf", length=11)
 	private String cpf;
@@ -43,7 +43,7 @@ public class Student extends AbstractEntity {
 	@Column(name="fl_active", nullable=false)
 	private Boolean active;
 
-	@OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name="address", referencedColumnName="id_address")
 	private Address address;
 	
@@ -104,5 +104,13 @@ public class Student extends AbstractEntity {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Date getDtRegister() {
+		return dtRegister;
+	}
+
+	public void setDtRegister(Date dtRegister) {
+		this.dtRegister = dtRegister;
 	}
 }

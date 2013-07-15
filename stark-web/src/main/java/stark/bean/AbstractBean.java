@@ -7,8 +7,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.FacesContext;
 
-import stark.dao.StudentDAO;
-
 public abstract class AbstractBean implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

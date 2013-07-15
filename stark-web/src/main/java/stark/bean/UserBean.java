@@ -7,7 +7,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 
-import stark.dao.UserDAO;
 import stark.entity.User;
 
 @ManagedBean(name="userBean")
@@ -19,34 +18,30 @@ public class UserBean extends AbstractBean {
 	private List<User> users = new ArrayList<User>();
 	private User user = new User();
 
-	private UserDAO dao;
-	
-	private Boolean isEditEntity = false;
+	private Boolean newEntity = false;
 	
 	public void initialize() {
 
-		dao = new UserDAO();
-		users = dao.findAll();
 	}
 
 	public void save(ActionEvent event) {
 
-		if(!isEditEntity && user.getId() == null) {
+		if(!newEntity && user.getId() == null) {
 
 			addInfoGrowlMessage("User " + user.getName() + " saved!");
-			dao.save(user);
-			users = dao.findAll();
+//			dao.save(user);
 		} else {
 			
 			addInfoGrowlMessage("User " + user.getName() + " updated!");
-			dao.update(user);
+//			dao.update(user);
 		}
+//		users = dao.findAll();
 	}
 	
 	public void remove(ActionEvent event) {
 		
-		dao.remove(user);
-		users = dao.findAll();
+//		dao.remove(user);
+//		users = dao.findAll();
 		addInfoGrowlMessage("User " + user.getName() + " removed!");
 	}
 	
@@ -57,12 +52,12 @@ public class UserBean extends AbstractBean {
 	private void clean() {
 		
 		user = new User();
-		isEditEntity = false;
+		newEntity = false;
 	}
 	
 	public void prepareEdit() {
 		
-		isEditEntity = true;
+		newEntity = true;
 	}
 
 	public List<User> getUsers() {
@@ -81,12 +76,12 @@ public class UserBean extends AbstractBean {
 		this.user = user;
 	}
 
-	public Boolean getIsEditEntity() {
-		return isEditEntity;
+	public Boolean getNewEntity() {
+		return newEntity;
 	}
 
-	public void setIsEditEntity(Boolean isEditEntity) {
-		this.isEditEntity = isEditEntity;
+	public void setNewEntity(Boolean newEntity) {
+		this.newEntity = newEntity;
 	}
 
 }

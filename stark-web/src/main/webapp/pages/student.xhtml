@@ -22,11 +22,10 @@
 		            <h:outputText value="#{student.cpf}" converter="cpfConverter" />  
 		        </p:column>
 
-		  		<p:column style="width:22%" headerText="Actions">
-					
+		  		<p:column style="width:17%" headerText="Actions">
                		<p:commandButton oncomplete="visualizeDialog.show();" icon="visualizeIcon" 
 									 title="visualize" process="@this" update=":formGrid:panelGridDialog">
-               			<f:setPropertyActionListener value="#{student}" target="#{studentBean.studentViewRemove}" />
+               			<f:setPropertyActionListener value="#{student}" target="#{studentBean.student}" />
            			</p:commandButton>
            			
            			<p:commandButton update=":formGrid:mainPanel" icon="editIcon" actionListener="#{studentBean.prepareEdit}" title="edit"
@@ -36,7 +35,7 @@
            			
            			<p:commandButton title="remove" oncomplete="removeStudent.show();" icon="removeIcon"
            							 process="@this" update=":formGrid:removeStudent">
-               			<f:setPropertyActionListener value="#{student}" target="#{studentBean.studentViewRemove}" />
+               			<f:setPropertyActionListener value="#{student}" target="#{studentBean.student}" />
            			</p:commandButton>
        			</p:column>  
 		  
@@ -57,7 +56,7 @@
 				<p:outputLabel for="email" value="Email"  />
 				<p:inputText id="email" value="#{studentBean.student.email}" validatorMessage="Invalid e-mail format"
 							 maxlength="50" styleClass="ui-inputText-stark" >
-						 <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+					 <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 				 </p:inputText>
 
 				<p:outputLabel for="cpf" value="CPF"  />
@@ -76,60 +75,62 @@
 							 maxlength="50" styleClass="ui-inputText-stark" />
 				
 				<p:outputLabel for="addressNumber" value="Number"  />
-				<p:inputText id="addressNumber" value="#{studentBean.student.address.number}" 
+				<p:inputText id="addressNumber" value="#{studentBean.student.address.number}" style="width: 100px"
 							onkeydown="return forceInteger(event);" maxlength="5" styleClass="ui-inputText-stark" />
 				
                 <p:outputLabel for="addressComplement" value="Complement"  />
 				<p:inputTextarea id="addressComplement" value="#{studentBean.student.address.complement}" 
 								autoResize="false" maxlength="100" styleClass="ui-inputText-stark" />
-                	 	 
+			
 			</p:panelGrid>
-
+			
+			<p:separator /> 
+			
 			<p:commandButton icon="saveIcon" actionListener="#{studentBean.save}"
-							 value="#{studentBean.isEditEntity ? 'Update' : 'Save'}"
+							 value="#{studentBean.newEntity ? 'Update' : 'Save'}" 
 							 update="studentTable :formGrid:growl :formGrid:mainPanel" oncomplete="cleanFields();"/>
 
-			<p:commandButton icon="eraserIcon" value="#{studentBean.isEditEntity ? 'Cancel' : 'Clean'}" 
-							 oncomplete="cleanFields();" />
+			<p:commandButton icon="eraserIcon" value="#{studentBean.newEntity ? 'Cancel' : 'Clean'}" 
+							 oncomplete="cleanFields();" process="@this" />
 		</p:panel>
 
 		<p:confirmDialog id="removeStudent" widgetVar="removeStudent" header="Remove" resizable="false" 
-						 appendToBody="true" message="Remove #{studentBean.studentViewRemove.name} ?" >
+						 appendToBody="true" message="Remove #{studentBean.student.name} ?" >
 
 			<h:panelGrid columns="2">
-				<p:commandButton value="No" oncomplete="removeStudent.hide();" />
+				<p:commandButton value="No" oncomplete="removeStudent.hide(); cleanFields();" />
 
 				<p:commandButton value="Yes" actionListener="#{studentBean.remove}" immediate="true" process="@this"
 					oncomplete="removeStudent.hide(); cleanFields();" update="studentTable :formGrid:growl :formGrid:mainPanel" />
 			</h:panelGrid>
 		</p:confirmDialog>
 
-		<p:dialog modal="true" widgetVar="visualizeDialog" appendToBody="true" resizable="false" width="700" dynamic="false" >
+		<p:dialog modal="true" widgetVar="visualizeDialog" appendToBody="true" resizable="false" width="700" dynamic="false" onHide="cleanFields();" >
 
 				<h:panelGrid id="panelGridDialog" columns="2" cellpadding="5">  
                 	<h:outputLabel for="dialogName" value="Name: " />  
-                	<h:outputText id="dialogName" value="#{studentBean.studentViewRemove.name}" />
+                	<h:outputText id="dialogName" value="#{studentBean.student.name}" />
                 	
                 	<h:outputLabel for="dialogEmail" value="Email: " />  
-                	<h:outputText id="dialogEmail" value="#{studentBean.studentViewRemove.email}" />
+                	<h:outputText id="dialogEmail" value="#{studentBean.student.email}" />
                 	
                 	<h:outputLabel for="dialogCpf" value="CPF: " />  
-                	<h:outputText id="dialogCpf" value="#{studentBean.studentViewRemove.cpf}" converter="cpfConverter"/>
+                	<h:outputText id="dialogCpf" value="#{studentBean.student.cpf}" converter="cpfConverter"/>
                 	
                 	<h:outputLabel for="dialogPhone" value="Phone: " />  
-                	<h:outputText id="dialogPhone" value="#{studentBean.studentViewRemove.phone}" converter="phoneConverter"/>
+                	<h:outputText id="dialogPhone" value="#{studentBean.student.phone}" converter="phoneConverter"/>
                
 					<h:outputLabel for="dialogAddressStreet" value="Street: " />  
-                	<h:outputText id="dialogAddressStreet" value="#{studentBean.studentViewRemove.address.street}" />
+                	<h:outputText id="dialogAddressStreet" value="#{studentBean.student.address.street}" />
                 	
                 	<h:outputLabel for="dialogAddressNeighborhood" value="Neighborhood: " />  
-                	<h:outputText id="dialogAddressNeighborhood" value="#{studentBean.studentViewRemove.address.neighborhood}" />
+                	<h:outputText id="dialogAddressNeighborhood" value="#{studentBean.student.address.neighborhood}" />
                 	
                 	<h:outputLabel for="dialogAddressNumber" value="Number: " />  
-                	<h:outputText id="dialogAddressNumber" value="#{studentBean.studentViewRemove.address.number}" />
+                	<h:outputText id="dialogAddressNumber" value="#{studentBean.student.address.number}" />
                 	
                 	<h:outputLabel for="dialogAddressComplement" value="Complement: " />  
-                	<h:outputText id="dialogAddressComplement" value="#{studentBean.studentViewRemove.address.complement}" />
+                	<h:outputText id="dialogAddressComplement" value="#{studentBean.student.address.complement}" />
                 </h:panelGrid>
 
                 <p:commandButton title="Close" icon="removeIcon" value="Close" onclick="visualizeDialog.hide()"/>

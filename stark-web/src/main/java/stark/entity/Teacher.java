@@ -27,20 +27,20 @@ public class Teacher extends AbstractEntity {
 	@Column(name="name_teacher", nullable=false, length=100)
 	private String name;
 
-	@Column(name="phone", length=10)
+	@Column(name="phone", length=10, nullable=true)
 	private String phone;
 
-	@Column(name="cpf", length=11)
+	@Column(name="cpf", length=11, nullable=true)
 	private String cpf;
 
-	@OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name="address", referencedColumnName="id_address")
 	private Address address;
 
-	@Column(name="fl_active", nullable=false)
+	@Column(name="fl_active", nullable=true)
 	private Boolean active;
 	
-	@Column(name="email", length=50)
+	@Column(name="email", length=50, nullable=true)
 	private String email;
 	
 	public Integer getId() {

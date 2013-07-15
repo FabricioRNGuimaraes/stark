@@ -7,14 +7,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 
-import org.hibernate.annotations.common.util.StringHelper;
-
-import antlr.StringUtils;
-
-import stark.dao.ItemBoughtDAO;
-import stark.dao.ItemDAO;
 import stark.entity.Item;
-import stark.entity.ItemBought;
+import stark.service.IItemService;
+import stark.service.impl.ItemServiceImpl;
 
 @ManagedBean(name="itemBean")
 @ViewScoped
@@ -24,76 +19,61 @@ public class ItemBean extends AbstractBean {
 
 	private List<Item> itens = new ArrayList<Item>();
 	private Item item = new Item();
-
-	private List<ItemBought> itensBought = new ArrayList<ItemBought>();
-	private ItemBought itemBought = new ItemBought();
-	
-	private ItemDAO dao;
-	private ItemBoughtDAO itemBoughtDAO;
-	
-	private Boolean isEditEntity = false;
-//	private Boolean isViewEntity = false;
-	
-	private Boolean isEditEntityItemBought = false;
-//	private Boolean isViewEntityItemBought = false;
+	private IItemService service;
+	private Boolean newEntity = false;
 	
 	public void initialize() {
-
-		dao = new ItemDAO();
-		itens = dao.findAll();
-		
-		itemBoughtDAO = new ItemBoughtDAO();
-		itensBought = itemBoughtDAO.findAll();
+		service = new ItemServiceImpl();
+		itens = service.findAll();
 	}
 
 	public void onTabChange() {
-	
+		
 //		initialize();
-		clean();
-		cleanItemBought();
+//		clean();
+//		cleanItemBought();
 	}
 	
 	public void save(ActionEvent event) {
 
-		if(!isEditEntity && item.getId() == null) {
+		if(!newEntity && item.getId() == null) {
 
 			addInfoGrowlMessage("Item " + item.getDescription() + " saved!");
-			dao.save(item);
-			itens.add(item);
+			service.save(item);
 		} else {
 			
 			addInfoGrowlMessage("Item " + item.getDescription() + " updated!");
-			dao.update(item);
+			service.update(item);
 		}
+		itens.add(item);
 	}
 
-	public void saveItemBought(ActionEvent event) {
-
-		if(!isEditEntityItemBought && itemBought.getId() == null) {
-
-			addInfoGrowlMessage("Values for " + itemBought.getItem().getDescription() + " saved!");
-			itemBoughtDAO.save(itemBought);
-			itensBought.add(itemBought);
-		} else {
-			
-			addInfoGrowlMessage("Values for " + itemBought.getItem().getDescription() + " updated!");
-			itemBoughtDAO.update(itemBought);
-		}
-	}
-	
 	public void remove(ActionEvent event) {
 		
-		dao.remove(item);
+		service.remove(item);
 		itens.remove(item);
 		addInfoGrowlMessage("Item " + item.getDescription() + " removed!");
-//		clean();
+	}
+	
+	public void saveItemBought(ActionEvent event) {
+
+//		if(!isEditEntityItemBought && itemBought.getId() == null) {
+//
+//			addInfoGrowlMessage("Values for " + itemBought.getItem().getDescription() + " saved!");
+//			itemBoughtDAO.save(itemBought);
+//			itensBought.add(itemBought);
+//		} else {
+//			
+//			addInfoGrowlMessage("Values for " + itemBought.getItem().getDescription() + " updated!");
+//			itemBoughtDAO.update(itemBought);
+//		}
 	}
 	
 	public void removeItemBought(ActionEvent event) {
 		
-		itemBoughtDAO.remove(itemBought);
-		itensBought.remove(itemBought);
-		addInfoGrowlMessage("Values for " + itemBought.getItem().getDescription() + " removed!");
+//		itemBoughtDAO.remove(itemBought);
+//		itensBought.remove(itemBought);
+//		addInfoGrowlMessage("Values for " + itemBought.getItem().getDescription() + " removed!");
 //		clean();
 	}
 	
@@ -104,24 +84,23 @@ public class ItemBean extends AbstractBean {
 	private void clean() {
 		
 		item = new Item();
-		isEditEntity = false;
-//		isViewEntity = false;
+		newEntity = false;
 	}
 	
 	public void cleanItemBought(ActionEvent ev) {
-		cleanItemBought();
+//		cleanItemBought();
 	}
 	
 	private void cleanItemBought() {
 		
-		itemBought = new ItemBought();
-		isEditEntityItemBought = false;
+//		itemBought = new ItemBought();
+//		isEditEntityItemBought = false;
 //		isViewEntityItemBought = false;
 	}
 	
 	public void prepareEdit() {
 		
-		isEditEntity = true;
+		newEntity = true;
 //		isViewEntity = false;
 	}
 
@@ -132,7 +111,7 @@ public class ItemBean extends AbstractBean {
 
 	public void prepareEditItemBought() {
 		
-		isEditEntityItemBought = true;
+//		isEditEntityItemBought = true;
 //		isViewEntityItemBought = false;
 	}
 
@@ -157,52 +136,12 @@ public class ItemBean extends AbstractBean {
 		this.item = item;
 	}
 
-	public Boolean getIsEditEntity() {
-		return isEditEntity;
+	public Boolean getNewEntity() {
+		return newEntity;
 	}
 
-	public void setIsEditEntity(Boolean isEditEntity) {
-		this.isEditEntity = isEditEntity;
+	public void setNewEntity(Boolean newEntity) {
+		this.newEntity = newEntity;
 	}
-
-//	public Boolean getIsViewEntity() {
-//		return isViewEntity;
-//	}
-//
-//	public void setIsViewEntity(Boolean isViewEntity) {
-//		this.isViewEntity = isViewEntity;
-//	}
-
-	public List<ItemBought> getItensBought() {
-		return itensBought;
-	}
-
-	public void setItensBought(List<ItemBought> itensBought) {
-		this.itensBought = itensBought;
-	}
-
-	public ItemBought getItemBought() {
-		return itemBought;
-	}
-
-	public void setItemBought(ItemBought itemBought) {
-		this.itemBought = itemBought;
-	}
-
-	public Boolean getIsEditEntityItemBought() {
-		return isEditEntityItemBought;
-	}
-
-	public void setIsEditEntityItemBought(Boolean isEditEntityItemBought) {
-		this.isEditEntityItemBought = isEditEntityItemBought;
-	}
-
-//	public Boolean getIsViewEntityItemBought() {
-//		return isViewEntityItemBought;
-//	}
-//
-//	public void setIsViewEntityItemBought(Boolean isViewEntityItemBought) {
-//		this.isViewEntityItemBought = isViewEntityItemBought;
-//	}
 	
 }

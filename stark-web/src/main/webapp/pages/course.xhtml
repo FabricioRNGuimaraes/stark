@@ -22,7 +22,7 @@
 					
                		<p:commandButton oncomplete="visualizeDialog.show();" icon="visualizeIcon"
 									 title="visualize" process="@this" update=":formGrid:panelGridDialog">
-               			<f:setPropertyActionListener value="#{course}" target="#{courseBean.courseViewRemove}" />
+               			<f:setPropertyActionListener value="#{course}" target="#{courseBean.course}" />
            			</p:commandButton>
            			
            			<p:commandButton update=":formGrid:mainPanel" icon="editIcon" actionListener="#{courseBean.prepareEdit}" title="edit"
@@ -32,7 +32,7 @@
            			
            			<p:commandButton title="remove" oncomplete="removeCourse.show();" icon="removeIcon"
            							 process="@this" update=":formGrid:removeCourse">
-               			<f:setPropertyActionListener value="#{course}" target="#{courseBean.courseViewRemove}" />
+               			<f:setPropertyActionListener value="#{course}" target="#{courseBean.course}" />
            			</p:commandButton>
        			</p:column>  
 		  
@@ -51,33 +51,41 @@
 				<p:inputText id="description" value="#{courseBean.course.description}" required="true"
 							 requiredMessage="Description is required" styleClass="ui-inputText-stark" maxlength="50" />
 			</p:panelGrid>
+
+			<p:separator />
 			
-			<p:commandButton actionListener="#{courseBean.save}" value="#{courseBean.isEditEntity ? 'Update' : 'Save'}"
+			<p:commandButton actionListener="#{courseBean.save}" value="#{courseBean.newEntity ? 'Update' : 'Save'}"
 							 update="courseTable :formGrid:growl :formGrid:mainPanel" oncomplete="cleanFields();"
 							 icon="saveIcon" />
-			<p:commandButton icon="eraserIcon" value="#{courseBean.isEditEntity ? 'Cancel' : 'Clean'}" oncomplete="cleanFields();"  />
+
+			<p:commandButton icon="eraserIcon" value="#{courseBean.newEntity ? 'Cancel' : 'Clean'}" 
+							 oncomplete="cleanFields();" process="@this" />
+
 		</p:panel>
 
-		<p:confirmDialog id="removeCourse" widgetVar="removeCourse" message="Remove #{courseBean.courseViewRemove.description} ?" resizable="false"
+		<p:confirmDialog id="removeCourse" widgetVar="removeCourse" message="Remove #{courseBean.course.description} ?" resizable="false"
 				  		 appendToBody="true" header="Remove">
 
 			<h:panelGrid columns="2">
-				<p:commandButton value="No" oncomplete="removeCourse.hide();" />
+				<p:commandButton value="No" oncomplete="removeCourse.hide(); cleanFields();" />
 
 				<p:commandButton value="Yes" actionListener="#{courseBean.remove}" immediate="true" process="@this"
 					oncomplete="removeCourse.hide(); cleanFields();" update="courseTable :formGrid:growl :formGrid:mainPanel" />
 			</h:panelGrid>
 		</p:confirmDialog>
 
-		<p:dialog modal="true" widgetVar="visualizeDialog" appendToBody="true" resizable="false" width="700"  >
+		<p:dialog modal="true" widgetVar="visualizeDialog" appendToBody="true" resizable="false" width="700" dynamic="false" onHide="cleanFields();">
+			
 			<h:panelGrid id="panelGridDialog" columns="2" cellpadding="5">  
                	<h:outputLabel for="dialogDescription" value="Description: " />  
-               	<h:outputText id="dialogDescription" value="#{courseBean.courseViewRemove.description}" />
+               	<h:outputText id="dialogDescription" value="#{courseBean.course.description}" />
             </h:panelGrid>
 
                <p:commandButton title="Close" icon="removeIcon" value="Close" onclick="visualizeDialog.hide()"/>
 		</p:dialog>
+		
 		<p:remoteCommand name="cleanFields" actionListener="#{courseBean.clean}" update="mainPanel" immediate="true" process="@this"/>
+		
 		<p:hotkey bind="esc" handler="visualizeDialog.hide(); removeCourse.hide()" />
 	</ui:define>
 </ui:composition>

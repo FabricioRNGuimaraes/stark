@@ -7,9 +7,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 
-import stark.dao.StudentDAO;
 import stark.entity.Address;
 import stark.entity.Student;
+import stark.service.IStudentService;
+import stark.service.impl.StudentServiceImpl;
 
 @ManagedBean(name="studentBean")
 @ViewScoped
@@ -21,65 +22,59 @@ public class StudentBean extends AbstractBean {
 	
 	private List<Student> students = new ArrayList<Student>();
 	private Student student = new Student();
-	private Student studentViewRemove;
 	
-	private StudentDAO dao;
-	
-	private Boolean isEditEntity = false;
+	private Boolean newEntity = false;
 //	@Autowired
 //	@ManagedProperty(value="#{studentService}")
-//	IStudentService studentService;
+	private IStudentService studentService;
 	
 	public void initialize() {
-		
-		dao = new StudentDAO();
-		students = dao.findAll();
+		studentService = new StudentServiceImpl();
+		students = studentService.findAll();
 		createStudentAddress();
 	}
 
 	public void save(ActionEvent event) {
 
-//		studentService.save(student);
-
-		student.setActive(Boolean.TRUE);
-		if(!isEditEntity && student.getId() == null) {
+		if(!newEntity && student.getId() == null) {
 
 			addInfoGrowlMessage("Student " + student.getName() + " saved!");
-			dao.save(student);
-			students = dao.findAll();
+			studentService.save(student);
+			students = studentService.findAll();
 		} else {
 			
 			addInfoGrowlMessage("Student " + student.getName() + " updated!");
-			dao.update(student);
+			studentService.update(student);
 		}
+		
+		students = studentService.findAll();
 	}
 	
 	public void remove(ActionEvent event) {
 		
-		studentViewRemove.setActive(Boolean.FALSE);
-		dao.update(studentViewRemove);
-		students = dao.findAll();
-		addInfoGrowlMessage("Student " + studentViewRemove.getName() + " removed!");
+		studentService.remove(student);
+		students = studentService.findAll();
+		addInfoGrowlMessage("Student " + student.getName() + " removed!");
 	}
 	
 	public void clean(ActionEvent ev) {
 		clean();
 	}
 	
+	public void prepareEdit() {
+		
+		newEntity = true;
+	}
+	
 	private void clean() {
 		
 		student = new Student();
 		createStudentAddress();
-		isEditEntity = false;
+		newEntity = false;
 	}
 	
 	private void createStudentAddress() {
 		student.setAddress(new Address());
-	}
-	
-	public void prepareEdit() {
-		
-		isEditEntity = true;
 	}
 
 	public List<Student> getStudents() {
@@ -98,21 +93,12 @@ public class StudentBean extends AbstractBean {
 		this.student = student;
 	}
 
-	public Student getStudentViewRemove() {
-		return studentViewRemove;
+	public Boolean getNewEntity() {
+		return newEntity;
 	}
 
-	public void setStudentViewRemove(Student studentViewRemove) {
-		this.studentViewRemove = studentViewRemove;
+	public void setNewEntity(Boolean newEntity) {
+		this.newEntity = newEntity;
 	}
-
-	public Boolean getIsEditEntity() {
-		return isEditEntity;
-	}
-
-	public void setIsEditEntity(Boolean isEditEntity) {
-		this.isEditEntity = isEditEntity;
-	}
-
 
 }

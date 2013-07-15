@@ -7,8 +7,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 
-import stark.dao.CourseDAO;
 import stark.entity.Course;
+import stark.service.ICourseService;
+import stark.service.impl.CourseServiceImpl;
 
 @ManagedBean(name="courseBean")
 @ViewScoped
@@ -18,38 +19,34 @@ public class CourseBean extends AbstractBean {
 
 	private List<Course> courses = new ArrayList<Course>();
 	private Course course = new Course();
-	private Course courseViewRemove;
+	private ICourseService courseService;
 	
-	private CourseDAO dao;
-	
-	private Boolean isEditEntity = false;
+	private Boolean newEntity = false;
 	
 	public void initialize() {
 
-		dao = new CourseDAO();
-		courses = dao.findAll();
+		courseService = new CourseServiceImpl();
+		courses = courseService.findAll();
 	}
 
 	public void save(ActionEvent event) {
 
-		course.setActive(Boolean.TRUE);
-		if(!isEditEntity && course.getId() == null) {
+		if(!newEntity && course.getId() == null) {
 			addInfoGrowlMessage("Course " + course.getDescription() + " saved!");
-			dao.save(course);
-			courses = dao.findAll();
+			courseService.save(course);
 		} else {
 			
 			addInfoGrowlMessage("User " + course.getDescription() + " updated!");
-			dao.update(course);
+			courseService.update(course);
 		}
+		courses = courseService.findAll();
 	}
 	
 	public void remove(ActionEvent event) {
 		
-		courseViewRemove.setActive(Boolean.FALSE);
-		dao.update(courseViewRemove);
-		courses = dao.findAll();
-		addInfoGrowlMessage("Course " + courseViewRemove.getDescription() + " removed!");
+		courseService.remove(course);
+		courses = courseService.findAll();
+		addInfoGrowlMessage("Course " + course.getDescription() + " removed!");
 	}
 	
 	public void clean(ActionEvent ev) {
@@ -59,12 +56,12 @@ public class CourseBean extends AbstractBean {
 	private void clean() {
 		
 		course = new Course();
-		isEditEntity = false;
+		newEntity = false;
 	}
 	
 	public void prepareEdit() {
 		
-		isEditEntity = true;
+		newEntity = true;
 	}
 
 	public List<Course> getCourses() {
@@ -83,20 +80,12 @@ public class CourseBean extends AbstractBean {
 		this.course = course;
 	}
 
-	public Boolean getIsEditEntity() {
-		return isEditEntity;
+	public Boolean getNewEntity() {
+		return newEntity;
 	}
 
-	public void setIsEditEntity(Boolean isEditEntity) {
-		this.isEditEntity = isEditEntity;
-	}
-
-	public Course getCourseViewRemove() {
-		return courseViewRemove;
-	}
-
-	public void setCourseViewRemove(Course courseViewRemove) {
-		this.courseViewRemove = courseViewRemove;
+	public void setNewEntity(Boolean newEntity) {
+		this.newEntity = newEntity;
 	}
 
 }

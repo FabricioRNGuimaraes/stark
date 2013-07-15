@@ -4,12 +4,12 @@ import java.util.List;
 
 import stark.entity.AbstractEntity;
 
-public interface IGenericDAO {
+public interface IGenericDAO<T extends AbstractEntity> {
 
-	boolean save(AbstractEntity entity);
-	boolean remove(AbstractEntity entity);
-	boolean update(AbstractEntity entity);
-	AbstractEntity findById(Class<AbstractEntity> classe, Integer id);
-	List<AbstractEntity> findAll(Class<AbstractEntity> classe);
-	List<AbstractEntity> findAll(Class<AbstractEntity> classe, Boolean active);
+	boolean save(T entity);
+	boolean remove(T entity);
+	boolean update(T entity);
+	T findById(Integer id);
+	List<T> findAll();
+	List<T> findAllActive();
 }

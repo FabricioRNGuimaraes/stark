@@ -20,7 +20,7 @@ public class Course extends AbstractEntity {
 	@SequenceGenerator(name = "SEQ_COURSE", sequenceName = "SEQ_COURSE", allocationSize=1)
 	private Integer id;
 	
-	@Column(name="description", nullable=false, length=100)
+	@Column(name="description", nullable=false, length=50)
 	private String description;
 
 	@Column(name="fl_active", nullable=false)
