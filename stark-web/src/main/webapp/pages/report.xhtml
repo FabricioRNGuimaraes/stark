@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition template="/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="body">
+
+		<p:panel>
+		 	<p:panelGrid columns="2">
+			 	<h:outputLabel value="Students"  />
+	     		<p:selectOneMenu id="oneMenuStudents" value="#{reportBean.student}" converter="entityConverter" >
+					<f:selectItem itemLabel="Select a Student" />
+					<f:selectItems value="#{reportBean.students}" var="student" itemLabel="#{student.name}" 
+								   itemValue="#{student}" />
+				    
+				    <p:ajax event="change" process=":formGrid:oneMenuStudents"  
+				    		listener="#{reportBean.onChangeOneMenuStudents}" />
+				</p:selectOneMenu>
+				
+				<h:outputLabel value="Course"/>
+				
+				<h:outputLabel value="Start Date"/>
+				<p:calendar value="#{reportBean.startDate}" showOn="button" navigator="true"/>
+				
+				<h:outputLabel value="Final Date"/>
+				<p:calendar value="#{reportBean.finalDate}" showOn="button" navigator="true"/>
+		 	</p:panelGrid>
+		</p:panel>
+		
+		<p:panel>
+			<p:dataTable var="student" rows="5" 
+			 				 emptyMessage="There are no student selected" paginator="true" paginatorPosition="bottom" >  
+		
+				<p:column headerText="Day">  
+		            <h:outputText value="Day" />  
+		        </p:column>
+		
+	        </p:dataTable>
+		</p:panel>
+	
+	</ui:define>
+</ui:composition>

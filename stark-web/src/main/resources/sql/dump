@@ -1,0 +1,585 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Started on 2013-09-24 08:36:08 BRT
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = off;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET escape_string_warning = off;
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 144 (class 1259 OID 57748)
+-- Dependencies: 3
+-- Name: address; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE address (
+    id_address integer NOT NULL,
+    street character varying(50) NOT NULL,
+    neighborhood character varying(50),
+    home_number character varying(5),
+    complement character varying(100)
+);
+
+
+ALTER TABLE public.address OWNER TO postgres;
+
+--
+-- TOC entry 151 (class 1259 OID 57950)
+-- Dependencies: 1808 3
+-- Name: class_room; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE class_room (
+    id_class_room integer NOT NULL,
+    description character varying(50) NOT NULL,
+    color character varying(10),
+    fl_active boolean DEFAULT false NOT NULL
+);
+
+
+ALTER TABLE public.class_room OWNER TO postgres;
+
+--
+-- TOC entry 145 (class 1259 OID 57827)
+-- Dependencies: 1805 3
+-- Name: course; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE course (
+    id_course integer NOT NULL,
+    description character varying(50) NOT NULL,
+    fl_active boolean DEFAULT false NOT NULL
+);
+
+
+ALTER TABLE public.course OWNER TO postgres;
+
+--
+-- TOC entry 142 (class 1259 OID 57744)
+-- Dependencies: 3
+-- Name: seq_address; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE seq_address
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.seq_address OWNER TO postgres;
+
+--
+-- TOC entry 1838 (class 0 OID 0)
+-- Dependencies: 142
+-- Name: seq_address; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('seq_address', 43, true);
+
+
+--
+-- TOC entry 147 (class 1259 OID 57839)
+-- Dependencies: 3
+-- Name: seq_class_room; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE seq_class_room
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.seq_class_room OWNER TO postgres;
+
+--
+-- TOC entry 1839 (class 0 OID 0)
+-- Dependencies: 147
+-- Name: seq_class_room; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('seq_class_room', 9, true);
+
+
+--
+-- TOC entry 146 (class 1259 OID 57833)
+-- Dependencies: 3
+-- Name: seq_course; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE seq_course
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.seq_course OWNER TO postgres;
+
+--
+-- TOC entry 1840 (class 0 OID 0)
+-- Dependencies: 146
+-- Name: seq_course; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('seq_course', 19, true);
+
+
+--
+-- TOC entry 140 (class 1259 OID 57727)
+-- Dependencies: 3
+-- Name: seq_student; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE seq_student
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.seq_student OWNER TO postgres;
+
+--
+-- TOC entry 1841 (class 0 OID 0)
+-- Dependencies: 140
+-- Name: seq_student; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('seq_student', 18, true);
+
+
+--
+-- TOC entry 153 (class 1259 OID 57971)
+-- Dependencies: 3
+-- Name: seq_student_course; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE seq_student_course
+    START WITH 4
+    INCREMENT BY 1
+    MAXVALUE 9999
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.seq_student_course OWNER TO postgres;
+
+--
+-- TOC entry 1842 (class 0 OID 0)
+-- Dependencies: 153
+-- Name: seq_student_course; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('seq_student_course', 12, true);
+
+
+--
+-- TOC entry 143 (class 1259 OID 57746)
+-- Dependencies: 3
+-- Name: seq_teacher; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE seq_teacher
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.seq_teacher OWNER TO postgres;
+
+--
+-- TOC entry 1843 (class 0 OID 0)
+-- Dependencies: 143
+-- Name: seq_teacher; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('seq_teacher', 36, true);
+
+
+--
+-- TOC entry 154 (class 1259 OID 57973)
+-- Dependencies: 3
+-- Name: seq_teacher_course; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE seq_teacher_course
+    START WITH 4
+    INCREMENT BY 1
+    MAXVALUE 9999
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.seq_teacher_course OWNER TO postgres;
+
+--
+-- TOC entry 1844 (class 0 OID 0)
+-- Dependencies: 154
+-- Name: seq_teacher_course; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('seq_teacher_course', 5, true);
+
+
+--
+-- TOC entry 141 (class 1259 OID 57742)
+-- Dependencies: 3
+-- Name: seq_user; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE seq_user
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.seq_user OWNER TO postgres;
+
+--
+-- TOC entry 1845 (class 0 OID 0)
+-- Dependencies: 141
+-- Name: seq_user; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('seq_user', 8, true);
+
+
+--
+-- TOC entry 150 (class 1259 OID 57944)
+-- Dependencies: 1807 3
+-- Name: student; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE student (
+    id_student integer NOT NULL,
+    name_student character varying(100),
+    phone character varying(10),
+    cpf character varying(11),
+    address integer,
+    fl_active boolean DEFAULT false NOT NULL,
+    email character varying(50),
+    dt_register date
+);
+
+
+ALTER TABLE public.student OWNER TO postgres;
+
+--
+-- TOC entry 152 (class 1259 OID 57964)
+-- Dependencies: 3
+-- Name: student_course; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE student_course (
+    id_student_course integer NOT NULL,
+    student integer,
+    course integer,
+    value_class numeric(5,2),
+    dt_register date
+);
+
+
+ALTER TABLE public.student_course OWNER TO postgres;
+
+--
+-- TOC entry 148 (class 1259 OID 57917)
+-- Dependencies: 1806 3
+-- Name: teacher; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE teacher (
+    id_teacher integer NOT NULL,
+    name_teacher character varying(100),
+    phone character varying(10),
+    cpf character varying(11),
+    address integer,
+    fl_active boolean DEFAULT false NOT NULL,
+    email character varying(50)
+);
+
+
+ALTER TABLE public.teacher OWNER TO postgres;
+
+--
+-- TOC entry 155 (class 1259 OID 57975)
+-- Dependencies: 3
+-- Name: teacher_course; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE teacher_course (
+    id_teacher_course integer NOT NULL,
+    teacher integer,
+    course integer,
+    value_class numeric(5,2),
+    dt_register date
+);
+
+
+ALTER TABLE public.teacher_course OWNER TO postgres;
+
+--
+-- TOC entry 149 (class 1259 OID 57923)
+-- Dependencies: 3
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE users (
+    id_user integer NOT NULL,
+    name_user character varying(50),
+    password_user character varying(50),
+    email character varying(50),
+    fl_active boolean
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- TOC entry 1825 (class 0 OID 57748)
+-- Dependencies: 144
+-- Data for Name: address; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY address (id_address, street, neighborhood, home_number, complement) FROM stdin;
+13			0	
+12			0	
+14			0	
+16			0	
+15			0	
+8	Alameda das acácias	Jardim das palmeiras	160	Atras da casa da arvore ha uma nascente de pedra polida
+9			0	
+10			0	
+11			0	
+17				
+18	Acacias	Jardim das palmenras	123	
+19				
+20			00222	
+21				
+22				
+23	64564654	465456465456464	11111	fafsaf
+24				
+25				
+26				
+27	rua rua rua	bairro muito longe           de tudo	31323	fdsaifnafiosamfsafifaifmunfa ubfybfyafyafdfahfffsa
+34				
+35				
+36				
+37				
+38				
+39				
+42				
+43				
+\.
+
+
+--
+-- TOC entry 1830 (class 0 OID 57950)
+-- Dependencies: 151
+-- Data for Name: class_room; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY class_room (id_class_room, description, color, fl_active) FROM stdin;
+8	Giran	0400ff	t
+9	Gludio	6fff00	t
+7	Aden	ff0303	t
+\.
+
+
+--
+-- TOC entry 1826 (class 0 OID 57827)
+-- Dependencies: 145
+-- Data for Name: course; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY course (id_course, description, fl_active) FROM stdin;
+17	Spanish	t
+19	French	t
+18	English	t
+\.
+
+
+--
+-- TOC entry 1829 (class 0 OID 57944)
+-- Dependencies: 150
+-- Data for Name: student; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY student (id_student, name_student, phone, cpf, address, fl_active, email, dt_register) FROM stdin;
+9	estudante1			26	f	fa@gmail.com	2013-05-09
+11	Fabricio	3131313131	12312313123	36	t	fa@gmail.com	2013-09-10
+10	fabricio 2	1231313132	06958493284	27	t		2013-05-09
+14	1			39	t		2013-09-20
+17	2			42	t		2013-09-20
+18	gg			43	t		2013-09-23
+\.
+
+
+--
+-- TOC entry 1831 (class 0 OID 57964)
+-- Dependencies: 152
+-- Data for Name: student_course; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY student_course (id_student_course, student, course, value_class, dt_register) FROM stdin;
+1	11	17	25.00	2013-09-10
+2	11	18	5.00	2013-09-10
+3	10	18	100.50	2013-09-10
+11	18	17	20.00	2013-09-23
+12	18	18	15.00	2013-09-23
+\.
+
+
+--
+-- TOC entry 1827 (class 0 OID 57917)
+-- Dependencies: 148
+-- Data for Name: teacher; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY teacher (id_teacher, name_teacher, phone, cpf, address, fl_active, email) FROM stdin;
+28	Theo			25	t	
+35	Luan			34	t	
+\.
+
+
+--
+-- TOC entry 1832 (class 0 OID 57975)
+-- Dependencies: 155
+-- Data for Name: teacher_course; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY teacher_course (id_teacher_course, teacher, course, value_class, dt_register) FROM stdin;
+1	28	18	25.00	2013-09-10
+2	28	17	20.99	2013-09-10
+3	35	18	999.99	2013-09-10
+\.
+
+
+--
+-- TOC entry 1828 (class 0 OID 57923)
+-- Dependencies: 149
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY users (id_user, name_user, password_user, email, fl_active) FROM stdin;
+\.
+
+
+--
+-- TOC entry 1810 (class 2606 OID 57752)
+-- Dependencies: 144 144
+-- Name: address_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY address
+    ADD CONSTRAINT address_pkey PRIMARY KEY (id_address);
+
+
+--
+-- TOC entry 1820 (class 2606 OID 57955)
+-- Dependencies: 151 151
+-- Name: class_room_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY class_room
+    ADD CONSTRAINT class_room_pkey PRIMARY KEY (id_class_room);
+
+
+--
+-- TOC entry 1812 (class 2606 OID 57832)
+-- Dependencies: 145 145
+-- Name: course_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY course
+    ADD CONSTRAINT course_pkey PRIMARY KEY (id_course);
+
+
+--
+-- TOC entry 1822 (class 2606 OID 57968)
+-- Dependencies: 152 152
+-- Name: student_course_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY student_course
+    ADD CONSTRAINT student_course_pkey PRIMARY KEY (id_student_course);
+
+
+--
+-- TOC entry 1818 (class 2606 OID 57949)
+-- Dependencies: 150 150
+-- Name: student_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY student
+    ADD CONSTRAINT student_pkey PRIMARY KEY (id_student);
+
+
+--
+-- TOC entry 1824 (class 2606 OID 57979)
+-- Dependencies: 155 155
+-- Name: teacher_course_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY teacher_course
+    ADD CONSTRAINT teacher_course_pkey PRIMARY KEY (id_teacher_course);
+
+
+--
+-- TOC entry 1814 (class 2606 OID 57922)
+-- Dependencies: 148 148
+-- Name: teacher_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY teacher
+    ADD CONSTRAINT teacher_pkey PRIMARY KEY (id_teacher);
+
+
+--
+-- TOC entry 1816 (class 2606 OID 57927)
+-- Dependencies: 149 149
+-- Name: user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT user_pkey PRIMARY KEY (id_user);
+
+
+--
+-- TOC entry 1837 (class 0 OID 0)
+-- Dependencies: 3
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+-- Completed on 2013-09-24 08:36:08 BRT
+
+--
+-- PostgreSQL database dump complete
+--
+

@@ -1,0 +1,148 @@
+-- Sequence: seq_address
+
+-- DROP SEQUENCE seq_address;
+
+CREATE SEQUENCE seq_address
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 43
+  CACHE 1;
+ALTER TABLE seq_address OWNER TO postgres;
+
+seq_class_room
+seq_course
+seq_student_course
+seq_teacher
+seq_teacher_course
+seq_user
+
+-----
+CREATE TABLE address
+(
+  id_address integer NOT NULL,
+  street character varying(50) NOT NULL,
+  neighborhood character varying(50),
+  home_number character varying(5),
+  complement character varying(100),
+  CONSTRAINT address_pkey PRIMARY KEY (id_address)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE address OWNER TO postgres;
+
+--------
+
+CREATE TABLE class_room
+(
+  id_class_room integer NOT NULL,
+  description character varying(50) NOT NULL,
+  color character varying(10),
+  fl_active boolean NOT NULL DEFAULT false,
+  CONSTRAINT class_room_pkey PRIMARY KEY (id_class_room)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE class_room OWNER TO postgres;
+
+-------------
+
+CREATE TABLE course
+(
+  id_course integer NOT NULL,
+  description character varying(50) NOT NULL,
+  fl_active boolean NOT NULL DEFAULT false,
+  CONSTRAINT course_pkey PRIMARY KEY (id_course)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE course OWNER TO postgres;
+
+-----------
+
+CREATE TABLE student
+(
+  id_student integer NOT NULL,
+  name_student character varying(100),
+  phone character varying(10),
+  cpf character varying(11),
+  address integer,
+  fl_active boolean NOT NULL DEFAULT false,
+  email character varying(50),
+  dt_register date,
+  CONSTRAINT student_pkey PRIMARY KEY (id_student)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE student OWNER TO postgres;
+
+----------
+
+
+CREATE TABLE student_course
+(
+  id_student_course integer NOT NULL,
+  student integer,
+  course integer,
+  value_class numeric(5,2),
+  dt_register date,
+  CONSTRAINT student_course_pkey PRIMARY KEY (id_student_course)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE student_course OWNER TO postgres;
+--------
+
+CREATE TABLE teacher
+(
+  id_teacher integer NOT NULL,
+  name_teacher character varying(100),
+  phone character varying(10),
+  cpf character varying(11),
+  address integer,
+  fl_active boolean NOT NULL DEFAULT false,
+  email character varying(50),
+  CONSTRAINT teacher_pkey PRIMARY KEY (id_teacher)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE teacher OWNER TO postgres;
+
+---------------
+
+CREATE TABLE teacher_course
+(
+  id_teacher_course integer NOT NULL,
+  teacher integer,
+  course integer,
+  value_class numeric(5,2),
+  dt_register date,
+  CONSTRAINT teacher_course_pkey PRIMARY KEY (id_teacher_course)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE teacher_course OWNER TO postgres;
+
+----------
+
+
+CREATE TABLE users
+(
+  id_user integer NOT NULL,
+  name_user character varying(50),
+  password_user character varying(50),
+  email character varying(50),
+  fl_active boolean,
+  CONSTRAINT user_pkey PRIMARY KEY (id_user)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE users OWNER TO postgres;
