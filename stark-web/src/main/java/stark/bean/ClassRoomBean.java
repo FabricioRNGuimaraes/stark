@@ -13,7 +13,7 @@ import stark.service.impl.ClassRoomServiceImpl;
 
 @ManagedBean(name="classRoomBean")
 @ViewScoped
-public class ClassRoomBean extends AbstractBean {
+public class ClassRoomBean extends GenericBean {
 
 	private static final long serialVersionUID = 1L;
 

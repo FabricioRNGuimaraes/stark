@@ -5,17 +5,23 @@ import javax.faces.bean.SessionScoped;
 
 @ManagedBean(name="authenticationBean")
 @SessionScoped
-public class AuthenticationBean extends AbstractBean {
+public class AuthenticationBean extends GenericBean {
 
 	private static final long serialVersionUID = 1L;
 
 	private String login;
 	private String password;
 	
+	public void initialize() {
+
+//		dao = new UserDAO();
+	}
+	
 	public String login() {
 		addInfoGrowlMessage("User " + login + " logged in!");
 		return "loginSuccess";
 //		if(dao.login(login, password)) {
+//		getFacesContext().getExternalContext().getSessionMap().put("username", login);
 //			addInfoGrowlMessage("User " + login + " logged in!");
 //			return "loginSuccess";
 //		} else {
@@ -27,17 +33,12 @@ public class AuthenticationBean extends AbstractBean {
 
 	public String logout() {
 		
-//		ServletAuthentication.logout(getHttpRequest());
 //		getSession().invalidate();
+//		getFacesContext().getExternalContext().invalidateSession();
 		
 		return "logoutSuccess";
 	}
 	
-	public void initialize() {
-
-//		dao = new UserDAO();
-	}
-
 	public String getLogin() {
 		return login;
 	}

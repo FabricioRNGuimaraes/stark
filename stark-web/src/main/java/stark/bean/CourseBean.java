@@ -13,7 +13,7 @@ import stark.service.impl.CourseServiceImpl;
 
 @ManagedBean(name="courseBean")
 @ViewScoped
-public class CourseBean extends AbstractBean {
+public class CourseBean extends GenericBean {
 
 	private static final long serialVersionUID = 1L;
 
@@ -36,7 +36,7 @@ public class CourseBean extends AbstractBean {
 			courseService.save(course);
 		} else {
 			
-			addInfoGrowlMessage("User " + course.getDescription() + " updated!");
+			addInfoGrowlMessage("Course " + course.getDescription() + " updated!");
 			courseService.update(course);
 		}
 		courses = courseService.findAll();
@@ -53,15 +53,15 @@ public class CourseBean extends AbstractBean {
 		clean();
 	}
 	
+	public void prepareEdit() {
+		
+		newEntity = true;
+	}
+
 	private void clean() {
 		
 		course = new Course();
 		newEntity = false;
-	}
-	
-	public void prepareEdit() {
-		
-		newEntity = true;
 	}
 
 	public List<Course> getCourses() {

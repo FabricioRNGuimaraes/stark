@@ -20,16 +20,20 @@
 			<p:layout fullPage="true" >
 				<p:layoutUnit position="center" >
 					<h:form id="formCenterLogin">
-					<p:growl id="growlLogin" showDetail="false" sticky="false" showSummary="true" life="5000" />
-						<p:panel>
+						<p:growl id="growlLogin" showDetail="false" sticky="false" showSummary="true" life="5000" />
+						<p:panel style="position:absolute; left:38%; top:38%;">
+
 							<p:panelGrid columns="2" id="panelLogin">
+
 								<p:outputLabel for="login" value="Login:" />
 								<p:inputText id="login" value="#{authenticationBean.login}" />
+
 								<p:outputLabel for="password" value="Password:" />
 								<p:password id="password" value="#{authenticationBean.password}" />
-								<p:commandButton value="login" action="#{authenticationBean.login}" 
-											update=":formCenterLogin:growlLogin" />
 							</p:panelGrid>
+
+							<p:commandButton value="login" action="#{authenticationBean.login}" 
+											update=":formCenterLogin:growlLogin" icon="loginIcon" />
 						</p:panel>
 					</h:form>
 				</p:layoutUnit>

@@ -11,7 +11,7 @@ import stark.entity.User;
 
 @ManagedBean(name="userBean")
 @ViewScoped
-public class UserBean extends AbstractBean {
+public class UserBean extends GenericBean {
 
 	private static final long serialVersionUID = 1L;
 

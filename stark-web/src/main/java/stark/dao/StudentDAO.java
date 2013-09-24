@@ -1,5 +1,7 @@
 package stark.dao;
 
+import java.util.List;
+
 import stark.entity.Student;
 
 public class StudentDAO extends GenericDAOImpl<Student> {

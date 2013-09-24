@@ -7,7 +7,11 @@ import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.FacesContext;
 
-public abstract class AbstractBean implements Serializable {
+import org.primefaces.context.RequestContext;
+
+import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
+
+public abstract class GenericBean implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 //	protected static Logger log = LoggerFactory.getLogger(AbstractBean.class);
@@ -15,6 +19,10 @@ public abstract class AbstractBean implements Serializable {
 	@PostConstruct
 	public abstract void initialize();
 
+	protected void executeJavascript(String script) {
+		getRequestContext().execute(script);
+	}
+	
 	protected void addInfoGrowlMessage(String message) {
 		getFacesContext().addMessage(null, createFacesMessage(message, FacesMessage.SEVERITY_INFO));
 	}
@@ -32,6 +40,10 @@ public abstract class AbstractBean implements Serializable {
 
 	private FacesContext getFacesContext() { 
 		return FacesContext.getCurrentInstance(); 
+	}
+	
+	private RequestContext getRequestContext() {
+		return RequestContext.getCurrentInstance();
 	}
 	
 //	protected ServletContext getServletContext() {

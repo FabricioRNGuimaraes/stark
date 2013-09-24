@@ -9,10 +9,9 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<ui:define name="body">
-
-		<p:panel id="panelSchedule">
+		<p:panel>
 			<p:schedule id="schedule" allDaySlot="false" view="agendaWeek" showWeekends="false" minTime="7" value="#{scheduleBean.scheduleModel}"
-						maxTime="21" slotMinutes="30" >
+						maxTime="21" >
 				 <p:ajax event="dateSelect" listener="#{scheduleBean.onDateSelect}" oncomplete="eventDialog.show()" 
 				 		 update="eventDialog"/>
 				 <p:ajax event="eventSelect"  listener="#{scheduleBean.onEventSelect}" oncomplete="eventDialog.show()" />
@@ -20,31 +19,61 @@
 		</p:panel>
 
 		<p:dialog modal="true" widgetVar="eventDialog" appendToBody="true" resizable="false" width="700" dynamic="false" 
-				  header="#{scheduleModel.eventDate.day}" id="eventDialog">
+				  header="Date: #{scheduleModel.eventDate.day} - #{scheduleModel.classDate}" id="eventDialog">
 
-			<h:panelGrid id="panelGridDialog" columns="2" cellpadding="5">
-			 	<p:outputLabel for="students" value="Students"  />
-               	<p:pickList id="students" value="#{scheduleBean.students}" var="student" itemLabel="#{student.name}" itemValue="#{student}" 
-               				converter="entityConverter"/>
-               	
-               	<p:outputLabel for="teachers" value="Teachers"  />
-               	<p:pickList id="teachers" value="#{scheduleBean.teachers}" var="teacher" itemLabel="#{teacher.name}" itemValue="#{teacher}" 
-               				converter="entityConverter" />
-               	
-               	<p:outputLabel for="classRoom" value="Class Room"  />
-       			<p:selectOneRadio id="classRoom" value="#{scheduleBean.classRoom}" converter="entityConverter">
-						<f:selectItems value="#{scheduleBean.classRooms}" itemLabel="#{classRoom.description}" var="classRoom" 
-									   itemValue="#{classRoom}" />
-       			</p:selectOneRadio>
+			<h:panelGrid id="panelGridDialog" columns="2">
        			
-       			<p:outputLabel for="eventDate" value="Event Date"  />
-       			<p:calendar id="eventDate" value="#{scheduleModel.eventDate}"/>
+       			<h:outputLabel value="Class Room" />
+       			<p:selectOneMenu id="oneMenuClassRooms" value="#{scheduleBean.classRoom}" >
+					<f:selectItem itemLabel="Select a Class Room" />
+					<f:selectItems value="#{scheduleBean.classRooms}" var="classRoom" itemLabel="#{classRoom.description}" 
+								   itemValue="#{classRoom}" />
+				</p:selectOneMenu>
        			
-       			<p:commandButton title="Close" icon="removeIcon" value="Close" onclick="eventDialog.hide()"/>
-       			<p:commandButton icon="saveIcon" actionListener="#{scheduleBean.save}" value="Save"
-							 update=":formGrid:growl" oncomplete="eventDialog.hide()"/>
+       			<h:outputLabel value="Course"  />
+       			<p:selectOneMenu id="oneMenuCourses" value="#{scheduleBean.course}" converter="entityConverter" >
+					<f:selectItem itemLabel="Select a Course" />
+					<f:selectItems value="#{scheduleBean.courses}" var="course" itemLabel="#{course.description}" 
+								   itemValue="#{course}" />
+				    <p:ajax update=":formGrid:studentsPickList :formGrid:teachersPickList"
+				    		event="change" process=":formGrid:oneMenuCourses"  
+				    		listener="#{scheduleBean.onChangeOneMenuCourse}" />
+				</p:selectOneMenu>
+       			
+      			<h:outputLabel value="Students"  />
+               	<p:pickList id="studentsPickList" value="#{scheduleBean.studentsPickList}" var="student" itemLabel="#{student.name}" 
+               				itemValue="#{student}" converter="entityConverter" showSourceControls="true" showTargetControls="true"
+                   			showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains">
+       				 
+       				 <f:facet name="sourceCaption">Available</f:facet>  
+        			 <f:facet name="targetCaption">Selected</f:facet> 
+        			 
+        			 <p:column>
+        			 	#{student.name}
+        			 </p:column>
+       			 </p:pickList>
+       			 
+       			<h:outputLabel value="Teachers"  />
+               	<p:pickList id="teachersPickList" value="#{scheduleBean.teachersPickList}" var="teacher" itemLabel="#{teacher.name}" 
+               				itemValue="#{teacher}" converter="entityConverter" showSourceControls="false" showTargetControls="false"  
+                   			showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" >
+       				 
+       				 <f:facet name="sourceCaption">Available</f:facet>  
+        			 <f:facet name="targetCaption">Selected</f:facet> 
+        			 
+        			 <p:column>
+        			 	#{teacher.name}
+        			 </p:column>
+       			 </p:pickList>
 			</h:panelGrid>	
+    		
+    		<p:commandButton title="Close" icon="removeIcon" value="Close" onclick="eventDialog.hide(); cleanFields();" />
+      		<p:commandButton icon="saveIcon" actionListener="#{scheduleBean.save}" value="Save"
+						 update=":formGrid:growl" oncomplete="eventDialog.hide(); remoteCommandSave()"/>
 		</p:dialog>
+		
 		<p:hotkey bind="esc" handler="eventDialog.hide()" />
+		<p:remoteCommand name="cleanFields" actionListener="#{scheduleBean.clean}" update="eventDialog" immediate="true" process="@this" />
+		<p:remoteCommand name="remoteCommandSave" actionListener="#{scheduleBean.save}" update=":formGrid:growl" immediate="true" process="@this" />		
 	</ui:define>
 </ui:composition>

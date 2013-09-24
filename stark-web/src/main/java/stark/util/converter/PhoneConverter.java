@@ -1,4 +1,4 @@
-package stark.util;
+package stark.util.converter;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;

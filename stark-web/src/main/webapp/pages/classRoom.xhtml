@@ -18,7 +18,7 @@
 		            <h:outputText value="#{classRoom.description}" />  
 		        </p:column>
 
-		  		<p:column style="width:22%" headerText="Actions">
+		  		<p:column style="width:10%" headerText="Actions">
 					
                		<p:commandButton oncomplete="visualizeDialog.show();" icon="visualizeIcon"
 									 title="visualize" process="@this" update=":formGrid:panelGridDialog">
@@ -52,7 +52,8 @@
 							 styleClass="ui-inputText-stark" maxlength="50" />
 							 
  				<p:outputLabel for="color" value="Color"  />
-				<p:colorPicker id="color" value="#{classRoomBean.classRoom.color}" mode="inline"/>
+ 				<p:inputText id="color" value="#{classRoomBean.classRoom.color}" maxlength="10"/>
+<!-- 				<p:colorPicker id="color" value="#{classRoomBean.classRoom.color}" mode="inline"/> -->
 			</p:panelGrid>
 			
 		  	<p:separator /> 
@@ -85,7 +86,7 @@
                	<h:outputText id="dialogColor" value="#{classRoomBean.classRoom.color}" />
             </h:panelGrid>
 
-               <p:commandButton title="Close" icon="removeIcon" value="Close" onclick="visualizeDialog.hide()"/>
+            <p:commandButton title="Close" icon="removeIcon" value="Close" onclick="visualizeDialog.hide()"/>
 		</p:dialog>
 
 		<p:remoteCommand name="cleanFields" actionListener="#{classRoomBean.clean}" update="mainPanel" immediate="true" process="@this"/>

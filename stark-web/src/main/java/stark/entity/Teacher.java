@@ -1,5 +1,7 @@
 package stark.entity;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -42,6 +45,9 @@ public class Teacher extends AbstractEntity {
 	
 	@Column(name="email", length=50, nullable=true)
 	private String email;
+	
+	@OneToMany(mappedBy="teacher", cascade=CascadeType.ALL)
+	private List<TeacherCourse> teacherCourses;
 	
 	public Integer getId() {
 		return id;
@@ -97,5 +103,13 @@ public class Teacher extends AbstractEntity {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public List<TeacherCourse> getTeacherCourses() {
+		return teacherCourses;
+	}
+
+	public void setTeacherCourses(List<TeacherCourse> teacherCourses) {
+		this.teacherCourses = teacherCourses;
 	}
 }

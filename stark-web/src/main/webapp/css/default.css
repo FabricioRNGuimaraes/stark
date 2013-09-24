@@ -1,3 +1,7 @@
+.ui-picklist .ui-picklist-list {
+	height: 100px !important;
+}
+
 .removeIcon {
 	background: url(../images/remove.png) 0 0 no-repeat !important;
 }
@@ -22,6 +26,14 @@
 	background: url(../images/eraser.png) 0 0 no-repeat !important;
 }
 
+.loginIcon {
+	background: url(../images/login.png) 0 0 no-repeat !important;
+}
+
+.logoutIcon {
+	background: url(../images/logout.png) 0 0 no-repeat !important;
+}
+
 .ui-icon-alert {
 	background: url(../images/eraser.png) 0 0 no-repeat !important;
 }
@@ -36,6 +48,11 @@
 
 .ui-selectOneMenu-stark {
 	width: 98%;
+}
+
+.ui-button-panelGrid {
+	width: 20px;
+	height: 20px;	
 }
 
 RED {

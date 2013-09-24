@@ -1,6 +1,7 @@
 package stark.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -46,6 +49,9 @@ public class Student extends AbstractEntity {
 	@OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name="address", referencedColumnName="id_address")
 	private Address address;
+	
+	@OneToMany(mappedBy="student", cascade=CascadeType.ALL)
+	private List<StudentCourse> studentCourses;
 	
 	@Column(name="email", length=50)
 	private String email;
@@ -112,5 +118,13 @@ public class Student extends AbstractEntity {
 
 	public void setDtRegister(Date dtRegister) {
 		this.dtRegister = dtRegister;
+	}
+
+	public List<StudentCourse> getStudentCourses() {
+		return studentCourses;
+	}
+
+	public void setStudentCourses(List<StudentCourse> studentCourses) {
+		this.studentCourses = studentCourses;
 	}
 }

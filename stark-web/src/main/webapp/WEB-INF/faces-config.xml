@@ -27,4 +27,8 @@
 		</navigation-case>
 	</navigation-rule>
 	
+	<lifecycle>
+		<phase-listener>stark.security.AuthorizationListener</phase-listener>
+	</lifecycle>
+	
 </faces-config>
