@@ -1,13 +1,15 @@
 package stark.service.impl;
 
+import java.io.Serializable;
 import java.util.List;
 
 import stark.dao.ClassRoomDAO;
 import stark.entity.ClassRoom;
 import stark.service.IClassRoomService;
 
-public class ClassRoomServiceImpl implements IClassRoomService {
+public class ClassRoomServiceImpl implements IClassRoomService, Serializable {
 
+	private static final long serialVersionUID = 1L;
 	ClassRoomDAO dao = new ClassRoomDAO();
 	
 	@Override

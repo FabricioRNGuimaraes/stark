@@ -12,24 +12,59 @@
 
 		<p:panel>
 		 	<p:panelGrid columns="2">
-			 	<h:outputLabel value="Students"  />
-	     		<p:selectOneMenu id="oneMenuStudents" value="#{reportBean.student}" converter="entityConverter" >
-					<f:selectItem itemLabel="Select a Student" />
-					<f:selectItems value="#{reportBean.students}" var="student" itemLabel="#{student.name}" 
-								   itemValue="#{student}" />
-				    
-				    <p:ajax event="change" process=":formGrid:oneMenuStudents"  
-				    		listener="#{reportBean.onChangeOneMenuStudents}" />
+			 	<h:outputLabel value="Class Room *" />
+       			<p:selectOneMenu id="oneMenuClassRooms" value="#{reportBean.classRoom}" >
+					<f:selectItem itemLabel="Select a Class Room" />
+					<f:selectItems value="#{reportBean.classRooms}" var="classRoom" itemLabel="#{classRoom.description} - #{classRoom.id}" 
+								   itemValue="#{classRoom}" />
 				</p:selectOneMenu>
+       			
+       			<h:outputLabel value="Course *"  />
+       			<p:selectOneMenu id="oneMenuCourses" value="#{reportBean.course}" converter="entityConverter" >
+					<f:selectItem itemLabel="Select a Course" />
+					<f:selectItems value="#{reportBean.courses}" var="course" itemLabel="#{course.description} - #{course.id}" 
+								   itemValue="#{course}" />
+				    <p:ajax update=":formGrid:studentsPickList :formGrid:teachersPickList"
+				    		event="change" process=":formGrid:oneMenuCourses"  
+				    		listener="#{reportBean.onChangeOneMenuCourse}" />
+				</p:selectOneMenu>
+       			
+      			<h:outputLabel value="Students *"  />
+               	<p:pickList id="studentsPickList" value="#{reportBean.studentsPickList}" var="student" itemLabel="#{student.name}" 
+               				itemValue="#{student}" converter="entityConverter"
+                   			showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains">
+       				 
+       				 <f:facet name="sourceCaption">Available</f:facet>  
+        			 <f:facet name="targetCaption">Selected</f:facet> 
+        			 
+        			 <p:column>
+        			 	#{student.name} - #{student.id}
+        			 </p:column>
+       			 </p:pickList>
+       			 
+       			<h:outputLabel value="Teachers *" />
+               	<p:pickList id="teachersPickList" value="#{reportBean.teachersPickList}" var="teacher" itemLabel="#{teacher.name}" 
+               				itemValue="#{teacher}" converter="entityConverter" showSourceControls="false" showTargetControls="false"  
+                   			showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" >
+       				 
+       				 <f:facet name="sourceCaption">Available</f:facet>  
+        			 <f:facet name="targetCaption">Selected</f:facet> 
+        			 
+        			 <p:column>
+        			 	#{teacher.name} - #{teacher.id}
+        			 </p:column>
+       			 </p:pickList>
 				
-				<h:outputLabel value="Course"/>
-				
-				<h:outputLabel value="Start Date"/>
+				<h:outputLabel value="Start Date *"/>
 				<p:calendar value="#{reportBean.startDate}" showOn="button" navigator="true"/>
 				
-				<h:outputLabel value="Final Date"/>
-				<p:calendar value="#{reportBean.finalDate}" showOn="button" navigator="true"/>
+				<p:outputLabel value="Hour: "/>
+				<p:inputText value="#{reportBean.hour}"/>
+				
 		 	</p:panelGrid>
+		 	
+		 	<p:commandButton value="save" icon="saveIcon" actionListener="#{reportBean.save}" 
+		 					update=":formGrid:growl"/>
 		</p:panel>
 		
 		<p:panel>

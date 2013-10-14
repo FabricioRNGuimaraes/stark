@@ -9,19 +9,31 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<ui:define name="body">
+		
 		<p:panel>
 			<p:schedule id="schedule" allDaySlot="false" view="agendaWeek" showWeekends="false" minTime="7" value="#{scheduleBean.scheduleModel}"
-						maxTime="21" >
+						maxTime="21" slotMinutes="60" >
 				 <p:ajax event="dateSelect" listener="#{scheduleBean.onDateSelect}" oncomplete="eventDialog.show()" 
-				 		 update="eventDialog"/>
+				 		 update="panelGridDialog" />
 				 <p:ajax event="eventSelect"  listener="#{scheduleBean.onEventSelect}" oncomplete="eventDialog.show()" />
 			</p:schedule>
 		</p:panel>
 
-		<p:dialog modal="true" widgetVar="eventDialog" appendToBody="true" resizable="false" width="700" dynamic="false" 
-				  header="Date: #{scheduleModel.eventDate.day} - #{scheduleModel.classDate}" id="eventDialog">
+		<p:dialog modal="true" widgetVar="eventDialog" appendToBody="true" resizable="false" width="700"
+				  header="Date: #{scheduleModel.eventDate.day} - #{scheduleModel.classDate}  - #{scheduleModel.event.startDate}" id="eventDialog">
 
 			<h:panelGrid id="panelGridDialog" columns="2">
+       			
+       			<h:outputLabel value="Class Date" />
+       			<p:inputMask id="from" value="#{scheduleModel.event.startDate}" mask="99/99/9999">  
+               		 <f:convertDateTime pattern="dd/MM/yyyy" />  
+           		 </p:inputMask>  
+       			<h:outputLabel value="Class Date" />
+       			<h:inputText value="#{scheduleModel.event.startDate}" />
+       			
+       			<h:outputLabel value="Class Date" />
+       			<p:calendar value="#{scheduleModel.event.startDate}" />
+       			
        			
        			<h:outputLabel value="Class Room" />
        			<p:selectOneMenu id="oneMenuClassRooms" value="#{scheduleBean.classRoom}" >

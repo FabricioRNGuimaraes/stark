@@ -1,6 +1,7 @@
 package stark.bean;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class ScheduleBean extends GenericBean {
 
 	private static final long serialVersionUID = 1L;
 	
-	private ScheduleModel scheduleModel = new DefaultScheduleModel();  
+	private ScheduleModel scheduleModel ;  
     private ScheduleEvent event = new DefaultScheduleEvent();
 
     private Course course = new Course();
@@ -57,7 +58,7 @@ public class ScheduleBean extends GenericBean {
     
     @Override
 	public void initialize() {
-	
+
 		classRoomService = new ClassRoomServiceImpl();
 		courseService = new CourseServiceImpl();
 		studentCourseService = new StudentCourseServiceImpl();
@@ -68,8 +69,12 @@ public class ScheduleBean extends GenericBean {
 		
 		studentsPickList = new DualListModel<Student>(new ArrayList<Student>(), new ArrayList<Student>());
 		teachersPickList = new DualListModel<Teacher>(new ArrayList<Teacher>(), new ArrayList<Teacher>());
+		
+		scheduleModel = new DefaultScheduleModel();
+		scheduleModel.addEvent(new DefaultScheduleEvent("Ingles: theo; Fa", new Date(2013, 9, 12, 9, 00), new Date(2013, 9, 12, 10, 00)));
+		scheduleModel.addEvent(new DefaultScheduleEvent("Ingles: theo; Fa", new Date(2013, 9, 12, 10, 00), new Date(2013, 9, 12, 11, 00)));
 	}
-	
+//	#ppgcc_ufla#
 	public void onChangeOneMenuCourse(AjaxBehaviorEvent event) {
 
 		studentsPickList.getSource().clear();
@@ -92,7 +97,6 @@ public class ScheduleBean extends GenericBean {
 				teachersPickList.getSource().add(teacherCourse.getTeacher());
 			}
 		}
-		
 	}
 	
 	public void save(ActionEvent event) {
@@ -118,6 +122,7 @@ public class ScheduleBean extends GenericBean {
     	
     	classDate = (Date) selectEvent.getObject();
         event = new DefaultScheduleEvent("", (Date) selectEvent.getObject(), (Date) selectEvent.getObject());  
+
     }
 
 	public ScheduleModel getScheduleModel() {
@@ -182,6 +187,14 @@ public class ScheduleBean extends GenericBean {
 
 	public void setClassDate(Date classDate) {
 		this.classDate = classDate;
+	}
+
+	public ScheduleEvent getEvent() {
+		return event;
+	}
+
+	public void setEvent(ScheduleEvent event) {
+		this.event = event;
 	}
 
 }
