@@ -19,57 +19,44 @@
 		
 		<h:body>
 			<p:layout fullPage="true" >
-				<p:layoutUnit position="north" >
-					<h:form id="formNorth" dir="RTL">
-						<p:panelGrid columns="3">
-	
-							<p:commandButton title="Logout" icon="logoutIcon" action="#{authenticationBean.logout}" />
-							<h:outputLabel value="Welcome #{authenticationBean.login}" />
-		               		<p:selectOneMenu id="oneMenuPrimefacesTheme" value="#{applicationBean.primefacesTheme}" >
-	    	               		<f:selectItems value="#{applicationBean.primefacesThemes}" var="theme" 
-	        	                            itemLabel="#{theme}" itemValue="#{theme}" />
-	
-	            	            <p:ajax update=":formGrid :formGrid:growl"
-	                                event="change" process=":formNorth:oneMenuPrimefacesTheme" 
-	                                listener="#{applicationBean.onChangeOneMenuPrimefacesTheme}"/>
-		                    </p:selectOneMenu>
-						</p:panelGrid>
-					</h:form>
-				</p:layoutUnit>
-
-				<p:layoutUnit position="west" header="Menu" collapsible="true">
-					<h:form >  
-						<p:menu>  
-					        <p:submenu icon="" label="Main">  
-					            <p:menuitem value="Student" url="/pages/student.xhtml" />
-					            <p:menuitem value="Teacher" url="/pages/teacher.xhtml" />
-<!-- 					            <p:menuitem value="Schedule" url="/pages/schedule.xhtml" />   -->
-					        </p:submenu>  
-<!-- 					        <p:submenu label="Finantial">   -->
-<!-- 					            <p:menuitem value="Itens**" url="/pages/item.xhtml" /> -->
-<!-- 					            <p:menuitem value="Student courses" url="/pages/studentCourse.xhtml" /> -->
-<!-- 					            <p:menuitem value="Teacher courses" url="/pages/teacherCourse.xhtml" /> -->
-<!-- 					            <p:menuitem value="Payment" url="/pages/payment.xhtml" /> -->
-<!-- 					        </p:submenu>     -->
-					        <p:submenu label="Administration">  
-<!-- 					            <p:menuitem value="User**" url="/pages/user.xhtml" /> -->
-					            <p:menuitem value="Course" url="/pages/course.xhtml" />
-  					            <p:menuitem value="Class Room" url="/pages/classRoom.xhtml" />
+				<p:layoutUnit position="north" collapsible="false">
+					<h:form id="formNorth">
+						<p:menubar autoDisplay="false" >
+					        <p:submenu icon="starIcon" label="Main">  
+					            <p:menuitem value="User" url="/pages/user.xhtml" />
 					        </p:submenu>
-      					    <p:submenu label="Schedule">
-      					    	<p:menuitem value="Schedule" url="/pages/schedule.xhtml" />
-      					    </p:submenu> 
-      					    <p:submenu label="Report">
-      					    	<p:menuitem value="Report" url="/pages/report.xhtml" />
-      					    </p:submenu>
-				        </p:menu>
-			        </h:form>			
+					        
+					        <p:submenu icon="studentIcon" label="Student">
+						        <p:menuitem value="Register" url="/pages/student.xhtml" />
+						        <p:menuitem value="Vinculate" url="/pages/rel_student_course.xhtml" /> 
+					        </p:submenu>
+					        
+					        <p:submenu icon="teacherIcon" label="Teacher">
+						        <p:menuitem value="Register" url="/pages/teacher.xhtml" />
+						        <p:menuitem value="Vinculate" url="/pages/rel_teacher_course.xhtml" /> 
+					        </p:submenu>
+					        
+					         <p:submenu icon="scheduleIcon" label="Schedule">
+						        <p:menuitem value="Schedule" url="/pages/schedule.xhtml" />
+					        </p:submenu>
+					        
+      					    <f:facet name="options">
+								<p:panelGrid columns="2">
+									<h:outputLabel value="Welcome: #{authenticationBean.login}" />
+									<p:commandButton title="Logout" icon="logoutIcon" action="#{authenticationBean.logout}" />
+            					</p:panelGrid>  
+	        				</f:facet>  
+				        </p:menubar>
+					</h:form>
 				</p:layoutUnit>
 			
 				<p:layoutUnit position="center" >
 					<h:form id="formGrid" >
 						<p:growl id="growl" showDetail="false" sticky="false" showSummary="true" life="5000" />
 						<ui:insert name="body" />
+					</h:form>
+					<h:form id="formDialog">
+						<ui:insert name="dialogTemplate" />
 					</h:form>
 				</p:layoutUnit>
 			</p:layout>

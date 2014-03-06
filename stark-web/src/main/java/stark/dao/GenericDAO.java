@@ -8,19 +8,23 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import stark.entity.AbstractEntity;
+import stark.entity.GenericEntity;
 
-public class GenericDAOImpl<T extends AbstractEntity> implements IGenericDAO<T>, Serializable {
+public class GenericDAO<T extends GenericEntity> implements IGenericDAO<T>, Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	@SuppressWarnings("unchecked")
 	protected final Class<T> classe = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 
-	EntityManagerFactory entityManagerFactory  = Persistence.createEntityManagerFactory("persistenceUnit");;
-	EntityManager entityManager;	
+	private EntityManagerFactory entityManagerFactory  = Persistence.createEntityManagerFactory("persistenceUnit");;
+	private EntityManager entityManager;	
 	
-	public GenericDAOImpl() {
+	protected EntityManager getEntityMananger() {
+		return entityManager;
+	}
+	
+	public GenericDAO() {
 		entityManager = entityManagerFactory.createEntityManager();
 //		em.close();
 //		emf.close();
@@ -32,10 +36,11 @@ public class GenericDAOImpl<T extends AbstractEntity> implements IGenericDAO<T>,
 		try {
 			entityManager.getTransaction().begin();
 			entityManager.persist(entity);
+			entityManager.flush();
 			return true;
 			
 		} catch (Exception e) {
-//			entityManager.getTransaction().rollback();
+			entityManager.getTransaction().rollback();
 			e.printStackTrace();
 			return false;
 			
@@ -51,10 +56,11 @@ public class GenericDAOImpl<T extends AbstractEntity> implements IGenericDAO<T>,
 			
 			entityManager.getTransaction().begin();
 			entityManager.merge(entity);
+			entityManager.flush();
 			return true;
 			
 		} catch (Exception e) {
-//			entityManager.getTransaction().rollback();
+			entityManager.getTransaction().rollback();
 			e.printStackTrace();
 			return false;
 			
@@ -70,10 +76,11 @@ public class GenericDAOImpl<T extends AbstractEntity> implements IGenericDAO<T>,
 			
 			entityManager.getTransaction().begin();
 			entityManager.remove(entity);
+			entityManager.flush();
 			return true;
 			
 		} catch (Exception e) {
-//			entityManager.getTransaction().rollback();
+			entityManager.getTransaction().rollback();
 			e.printStackTrace();
 			return false;
 			

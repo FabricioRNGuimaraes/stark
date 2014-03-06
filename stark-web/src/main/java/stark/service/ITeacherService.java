@@ -1,15 +1,11 @@
 package stark.service;
 
-import java.util.List;
+import java.util.Set;
 
-import stark.entity.AbstractEntity;
 import stark.entity.Teacher;
 
-public interface ITeacherService {
+public interface ITeacherService extends IGenericService<Teacher> {
 
-	List<Teacher> findAll();
-	boolean save(Teacher teacher);
-	boolean remove(Teacher teacher);
-	boolean update(Teacher teacher);
-	Teacher findById(Integer id);
+	Set<Teacher> findByCourse(Integer idCourse);
+
 }

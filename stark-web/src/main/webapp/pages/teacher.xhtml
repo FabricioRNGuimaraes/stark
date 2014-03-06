@@ -17,24 +17,15 @@
 		        <p:column filterBy="#{teacher.name}" filterMatchMode="contains" headerText="Name" sortBy="#{teacher.name}">  
 		            <h:outputText value="#{teacher.name}" />  
 		        </p:column>
-		  
-		  		<p:column filterBy="#{teacher.cpf}" filterMatchMode="contains" headerText="CPF" sortBy="#{teacher.cpf}" >  
-		            <h:outputText value="#{teacher.cpf}" converter="cpfConverter" />  
-		        </p:column>
-
-				<p:column headerText="course-value" >  
-		            <h:outputText value="#{teacher.teacherCourses}" />  
-		        </p:column>
-
+           			
 		  		<p:column style="width:10%" headerText="Actions">
-					
                		<p:commandButton oncomplete="visualizeDialog.show();" icon="visualizeIcon" 
 									 title="visualize" process="@this" update=":formGrid:panelGridDialog">
                			<f:setPropertyActionListener value="#{teacher}" target="#{teacherBean.teacher}" />
            			</p:commandButton>
            			
-           			<p:commandButton update=":formGrid:mainPanel" icon="editIcon" actionListener="#{teacherBean.prepareEdit}" title="edit"
-           							 process="@this" oncomplete="remoteCommmandUpdatePanelCourse()">
+           			<p:commandButton update=":formGrid:mainPanel" icon="editIcon" 
+           							 actionListener="#{teacherBean.prepareEdit}" title="edit" process="@this" >
                			<f:setPropertyActionListener value="#{teacher}" target="#{teacherBean.teacher}" />
            			</p:commandButton>
            			
@@ -53,113 +44,46 @@
 	
 		<p:panel id="mainPanel" header="Teacher Data">
   
-			<p:panelGrid columns="4" styleClass="ui-panelGrid-stark" >
-				<p:outputLabel for="name" value="Name" />
-				<p:inputText id="name" value="#{teacherBean.teacher.name}" required="true"
-							 requiredMessage="Name is required" maxlength="100" styleClass="ui-inputText-stark" />
-
-				<p:outputLabel for="email" value="Email"  />
-				<p:inputText id="email" value="#{teacherBean.teacher.email}"
-							 maxlength="50" styleClass="ui-inputText-stark" >
-				 </p:inputText>
-
-				<p:outputLabel for="cpf" value="CPF"  />
-				<p:inputMask mask="999.999.999-99" id="cpf" size="12" value="#{teacherBean.teacher.cpf}" converter="cpfConverter" />
-							
-				<h:outputLabel for="phone" value="Phone " />  
-				<p:inputMask mask="(99)9999-9999" id="phone" value="#{teacherBean.teacher.phone}" converter="phoneConverter"
-							 size="12"/>
-                	 
-				<p:outputLabel for="addressStreet" value="Street"  />
-				<p:inputText id="addressStreet" value="#{teacherBean.teacher.address.street}"
-							 maxlength="50" styleClass="ui-inputText-stark" />
-                
-                <p:outputLabel for="addressNeighborhood" value="Neighborhood"  />
-				<p:inputText id="addressNeighborhood" value="#{teacherBean.teacher.address.neighborhood}" 
-							 maxlength="50" styleClass="ui-inputText-stark" />
+			<p:panelGrid columns="2" >
+				<p:outputLabel for="name" value="Name *" />
+				<p:inputText id="name" value="#{teacherBean.teacher.name}" maxlength="100" size="45" />
 				
-				<p:outputLabel for="addressNumber" value="Number"  />
-				<p:inputText id="addressNumber" value="#{teacherBean.teacher.address.number}" style="width: 100px" 
-							onkeydown="return forceInteger(event);" maxlength="5" styleClass="ui-inputText-stark" />
-				
-                <p:outputLabel for="addressComplement" value="Complement"  />
-				<p:inputTextarea id="addressComplement" value="#{teacherBean.teacher.address.complement}" 
-								autoResize="false" maxlength="100" styleClass="ui-inputText-stark" />
-                	 	 
-             	<h:outputText value="Course" />
-				<p:panel id="panelCourse">
-					<ui:repeat var="teacherCourseBO" value="#{teacherBean.teacherCoursesBO}" >
-						<p:panelGrid columns="3">
-							<h:outputText value="#{teacherCourseBO.description}"  />		
-							<p:selectBooleanCheckbox value="#{teacherCourseBO.selected}">
-								<p:ajax event="change" listener="#{teacherBean.changeEventSelectBoxCourse}" update=":formGrid:panelCourse"/>
-							</p:selectBooleanCheckbox>
-							<p:inputText value="#{teacherCourseBO.valueClass}" disabled="#{!teacherCourseBO.visibleValue}" 
-										 onkeydown="return forceInteger(event);" maxlength="3" />
-						</p:panelGrid>
-					</ui:repeat>
-				</p:panel>
-                	 	 
 			</p:panelGrid>
 
-			<p:separator />
- 
 			<p:commandButton icon="saveIcon" actionListener="#{teacherBean.save}"
-							 value="#{teacherBean.newEntity ? 'Update' : 'Save'}"
-							 update="teacherTable :formGrid:growl :formGrid:mainPanel" oncomplete="cleanFields();"/>
+							 value="#{teacherBean.newEntity ? 'Update' : 'Save'}" title="#{teacherBean.newEntity ? 'Update' : 'Save'}"
+							 update="teacherTable :formGrid:growl :formGrid:mainPanel" />
 
 			<p:commandButton icon="eraserIcon" value="#{teacherBean.newEntity ? 'Cancel' : 'Clean'}" 
-							 oncomplete="cleanFields();" process="@this" />
+							 onclick="cleanFields();" process="@this" 
+							 title="#{teacherBean.newEntity ? 'Cancel' : 'Clean'}" />
 		</p:panel>
 
-		<p:confirmDialog id="removeTeacher" widgetVar="removeTeacher" header="Remove" resizable="false" 
-						 appendToBody="true" message="Remove #{teacherBean.teacher.name} ?" >
+		<p:dialog id="removeTeacher" widgetVar="removeTeacher" header="Remove #{teacherBean.teacher.name}?" resizable="false" 
+						 appendToBody="true" modal="true" onHide="cleanFields();" >
 
+			<h:outputText value="#{teacherBean.teacher.name}"/>
+			<p:separator />
 			<h:panelGrid columns="2">
-				<p:commandButton value="No" oncomplete="removeTeacher.hide(); cleanFields();" />
-
+				<p:commandButton value="No" oncomplete="removeTeacher.hide();" />
 				<p:commandButton value="Yes" actionListener="#{teacherBean.remove}" immediate="true" process="@this"
-					oncomplete="removeTeacher.hide(); cleanFields();" update="teacherTable :formGrid:growl :formGrid:mainPanel" />
+					oncomplete="removeTeacher.hide();" update="teacherTable :formGrid:growl :formGrid:mainPanel" />
 			</h:panelGrid>
-		</p:confirmDialog>
+		</p:dialog>
 
-		<p:dialog modal="true" widgetVar="visualizeDialog" appendToBody="true" resizable="false" width="700" dynamic="false" onHide="cleanFields();">
+		<p:dialog modal="true" widgetVar="visualizeDialog" appendToBody="true" resizable="false" width="700" dynamic="false" onHide="cleanFields();" >
 
 				<h:panelGrid id="panelGridDialog" columns="2" cellpadding="5">  
-                	<h:outputLabel for="dialogName" value="Name: " />  
-                	<h:outputText id="dialogName" value="#{teacherBean.teacher.name}" />
-                	
-                	<h:outputLabel for="dialogEmail" value="Email: " />  
-                	<h:outputText id="dialogEmail" value="#{teacherBean.teacher.email}" />
-                	
-                	<h:outputLabel for="dialogCpf" value="CPF: " />  
-                	<h:outputText id="dialogCpf" value="#{teacherBean.teacher.cpf}" converter="cpfConverter"/>
-                	
-                	<h:outputLabel for="dialogPhone" value="Phone: " />  
-                	<h:outputText id="dialogPhone" value="#{teacherBean.teacher.phone}" converter="phoneConverter"/>
-               
-					<h:outputLabel for="dialogAddressStreet" value="Street: " />  
-                	<h:outputText id="dialogAddressStreet" value="#{teacherBean.teacher.address.street}" />
-                	
-                	<h:outputLabel for="dialogAddressNeighborhood" value="Neighborhood: " />  
-                	<h:outputText id="dialogAddressNeighborhood" value="#{teacherBean.teacher.address.neighborhood}" />
-                	
-                	<h:outputLabel for="dialogAddressNumber" value="Number: " />  
-                	<h:outputText id="dialogAddressNumber" value="#{teacherBean.teacher.address.number}" />
-                	
-                	<h:outputLabel for="dialogAddressComplement" value="Complement: " />  
-                	<h:outputText id="dialogAddressComplement" value="#{teacherBean.teacher.address.complement}" />
-                	
-                	<h:outputLabel for="dialogCourses" value="Courses: " />  
-                	<h:outputText id="dialogCourses" value="#{teacherBean.teacher.teacherCourses}" />
+                	<h:outputLabel value="Name: " />  
+                	<h:outputText value="#{teacherBean.teacher.name}" />
                 </h:panelGrid>
+                
+                <p:separator /> 
 
                 <p:commandButton title="Close" icon="removeIcon" value="Close" onclick="visualizeDialog.hide()"/>
 		</p:dialog>
 		
 		<p:remoteCommand name="cleanFields" actionListener="#{teacherBean.clean}" update="mainPanel" immediate="true" process="@this" />
-		<p:remoteCommand name="remoteCommmandUpdatePanelCourse" actionListener="#{teacherBean.editOnComplete}" 
-						 update="panelCourse" immediate="true" process="@this"/>
 		<p:hotkey bind="esc" handler="visualizeDialog.hide(); removeTeacher.hide()" />
 	</ui:define>
 </ui:composition>

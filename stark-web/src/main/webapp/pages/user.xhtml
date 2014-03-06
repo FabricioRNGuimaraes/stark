@@ -18,19 +18,18 @@
 		            <h:outputText value="#{user.name}" />  
 		        </p:column>
 
-		  		<p:column filterBy="#{user.email}" filterMatchMode="contains" headerText="e-mail" sortBy="#{user.email}" >  
-		            <h:outputText value="#{user.email}" />  
+		        <p:column headerText="Permission">  
+		            <h:outputText value="#{user.type}" converter="userTypeConverter" />  
 		        </p:column>
 
-		  		<p:column style="width:22%" headerText="Actions">
-					
+		  		<p:column style="width:10%" headerText="Actions">
                		<p:commandButton oncomplete="visualizeDialog.show();" icon="visualizeIcon"
 									 title="visualize" process="@this" update=":formGrid:panelGridDialog">
                			<f:setPropertyActionListener value="#{user}" target="#{userBean.user}" />
            			</p:commandButton>
            			
-           			<p:commandButton update=":formGrid:mainPanel" icon="editIcon" actionListener="#{userBean.prepareEdit}" title="edit"
-           							 process="@this" >
+           			<p:commandButton update=":formGrid:mainPanel" icon="editIcon" 
+           							 actionListener="#{userBean.prepareEdit}" title="edit" process="@this" >
                			<f:setPropertyActionListener value="#{user}" target="#{userBean.user}" />
            			</p:commandButton>
            			
@@ -49,56 +48,55 @@
 	
 		<p:panel id="mainPanel" header="User Data" >
   
-			<p:panelGrid columns="2" styleClass="ui-panelGrid-stark" >
-				<p:outputLabel for="name" value="User"  />
-				<p:inputText id="name" value="#{userBean.user.name}" required="true"
-							 requiredMessage="Name is required" styleClass="ui-inputText-stark" maxlength="50" />
+			<p:panelGrid columns="2" >
+				<p:outputLabel for="name" value="User *" />
+				<p:inputText id="name" value="#{userBean.user.name}" maxlength="50" size="45" />
 
-				<p:outputLabel for="password" value="Password" />
-				<p:password id="password" value="#{userBean.user.password}" required="true" redisplay="true"
-							 requiredMessage="Password is required" maxlength="50" styleClass="ui-inputText-stark" />
-							
-				<p:outputLabel for="email" value="e-mail" />  
-				<p:inputText id="email" value="#{userBean.user.email}" required="true"
-							 requiredMessage="e-mail is required" validatorMessage="Invalid e-mail format" maxlength="50"
-							 styleClass="ui-inputText-stark" >
-							 <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-				 </p:inputText>
-                	 	 
+				<p:outputLabel for="password" value="Password *" />
+				<p:password id="password" value="#{userBean.user.password}" maxlength="50" size="45" />
+
+				<p:outputLabel for="oneMenuUserType" value="Permission *" />
+				<p:selectOneMenu id="oneMenuUserType" value="#{userBean.user.type}" >
+					<f:selectItems value="#{userBean.userTypes}" var="type" 
+				   					itemLabel="#{type.name}" itemValue="#{type.value}" />
+				</p:selectOneMenu>
 			</p:panelGrid>
 			
-			<p:commandButton icon="saveIcon" actionListener="#{userBean.save}"
-							 value="#{userBean.isEditEntity ? 'Update' : 'Save'}"
-							 update="userTable :formGrid:growl :formGrid:mainPanel" oncomplete="cleanFields();"/>
+			<p:commandButton icon="saveIcon" actionListener="#{userBean.save}" value="#{userBean.newEntity ? 'Update' : 'Save'}"
+							 title="#{userBean.newEntity ? 'Update' : 'Save'}"
+							 update="userTable :formGrid:growl :formGrid:mainPanel" />
 
-			<p:commandButton icon="eraserIcon" value="#{userBean.isEditEntity ? 'Cancel' : 'Clean'}" 
-							 oncomplete="cleanFields();" />
+			<p:commandButton icon="eraserIcon" value="#{userBean.newEntity ? 'Cancel' : 'Clean'}"
+							 title="#{userBean.newEntity ? 'Cancel' : 'Clean'}" onclick="cleanFields();" />
 		</p:panel>
 
-		<p:confirmDialog id="removeUser" widgetVar="removeUser" message="Remove #{userBean.user.name} ?" resizable="false"
-				  		 appendToBody="true" header="Remove">
+		<p:dialog id="removeUser" widgetVar="removeUser" modal="true" resizable="false" onHide="cleanFields();"
+				  		 appendToBody="true" header="Remove #{userBean.user.name}?" >
 
+           	<h:outputText value="#{userBean.user.name}"/>
+			<p:separator />
 			<h:panelGrid columns="2">
-				<p:commandButton value="No" oncomplete="removeUser.hide();" />
-
-				<p:commandButton value="Yes" actionListener="#{userBean.remove}" process="@this" immediate="true"
-					oncomplete="removeUser.hide(); cleanFields();" update="userTable :formGrid:growl :formGrid:mainPanel" />
+			
+				<p:commandButton value="No" onclick="removeUser.hide();" />
+				<p:commandButton value="Yes" actionListener="#{userBean.remove}" process="@this" 
+					oncomplete="removeUser.hide();" update="userTable :formGrid:growl :formGrid:mainPanel" />
 			</h:panelGrid>
-		</p:confirmDialog>
+		</p:dialog>
 
-		<p:dialog modal="true" widgetVar="visualizeDialog" appendToBody="true" resizable="false" width="700"  >
+		<p:dialog modal="true" widgetVar="visualizeDialog" appendToBody="true" resizable="false" width="700" onHide="cleanFields();">
 			<h:panelGrid id="panelGridDialog" columns="2" cellpadding="5">  
-               	<h:outputLabel for="dialogName" value="Username: " />  
-               	<h:outputText id="dialogName" value="#{userBean.user.name}" />
+               	<h:outputLabel value="Username: " />  
+               	<h:outputText value="#{userBean.user.name}" />
                	
-               	<h:outputLabel for="dialogEmail" value="Email: " />  
-               	<h:outputText id="dialogEmail" value="#{userBean.user.email}" />
+       	        <h:outputLabel value="Permission: " />  
+               	<h:outputText value="#{userBean.user.type}" converter="userTypeConverter"/>
                	
             </h:panelGrid>
-               <p:commandButton title="Close" icon="removeIcon" value="Close" onclick="visualizeDialog.hide()"/>
+            <p:separator /> 
+            <p:commandButton title="Close" icon="removeIcon" value="Close" onclick="visualizeDialog.hide()"/>
 		</p:dialog>
 		
-		<p:remoteCommand name="cleanFields" actionListener="#{userBean.clean}" update="mainPanel" />
-		<p:hotkey bind="esc" handler="visualizeDialog.hide(); removeUser.hide()" />
+		<p:remoteCommand name="cleanFields" actionListener="#{userBean.clean}" update="mainPanel" immediate="true" process="@this"/>
+		<p:hotkey bind="esc" handler="visualizeDialog.hide(); removeUser.hide();"/>
 	</ui:define>
 </ui:composition>

@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="USERS")
-public class User extends AbstractEntity {
+public class User extends GenericEntity {
 
 	private static final long serialVersionUID = 1L;
 
@@ -26,8 +26,11 @@ public class User extends AbstractEntity {
 	@Column(name="password_user", nullable=false, length=50)
 	private String password;
 
-	@Column(name="email", nullable=true, length=50)
-	private String email;
+	@Column(name="fl_active", nullable=false)
+	private Boolean active = true;
+	
+	@Column(name="fl_type", nullable=false)
+	private Integer type = 0;
 	
 	public Integer getId() {
 		return id;
@@ -53,12 +56,20 @@ public class User extends AbstractEntity {
 		this.password = password;
 	}
 
-	public String getEmail() {
-		return email;
+	public Boolean getActive() {
+		return active;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
 	}
 
 }

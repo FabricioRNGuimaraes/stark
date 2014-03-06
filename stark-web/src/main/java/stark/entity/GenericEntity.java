@@ -10,7 +10,8 @@ import javax.persistence.MappedSuperclass;
 
 //@MappedSuperclass
 //@Access(AccessType.FIELD)
-public class AbstractEntity implements Serializable {
+@MappedSuperclass
+public class GenericEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

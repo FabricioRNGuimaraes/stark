@@ -1,23 +1,16 @@
 package stark.entity;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="TEACHER")
-public class Teacher extends AbstractEntity {
+public class Teacher extends GenericEntity {
 
 	private static final long serialVersionUID = 1L;
 
@@ -30,24 +23,8 @@ public class Teacher extends AbstractEntity {
 	@Column(name="name_teacher", nullable=false, length=100)
 	private String name;
 
-	@Column(name="phone", length=10, nullable=true)
-	private String phone;
-
-	@Column(name="cpf", length=11, nullable=true)
-	private String cpf;
-
-	@OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	@JoinColumn(name="address", referencedColumnName="id_address")
-	private Address address;
-
-	@Column(name="fl_active", nullable=true)
-	private Boolean active;
-	
-	@Column(name="email", length=50, nullable=true)
-	private String email;
-	
-	@OneToMany(mappedBy="teacher", cascade=CascadeType.ALL)
-	private List<TeacherCourse> teacherCourses;
+	@Column(name="fl_active", nullable=false)
+	private Boolean active = true;
 	
 	public Integer getId() {
 		return id;
@@ -65,30 +42,6 @@ public class Teacher extends AbstractEntity {
 		this.name = name;
 	}
 
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public String getCpf() {
-		return cpf;
-	}
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-
-	public Address getAddress() {
-		return address;
-	}
-
-	public void setAddress(Address address) {
-		this.address = address;
-	}
-
 	public Boolean getActive() {
 		return active;
 	}
@@ -97,19 +50,29 @@ public class Teacher extends AbstractEntity {
 		this.active = active;
 	}
 
-	public String getEmail() {
-		return email;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Teacher other = (Teacher) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 
-	public List<TeacherCourse> getTeacherCourses() {
-		return teacherCourses;
-	}
-
-	public void setTeacherCourses(List<TeacherCourse> teacherCourses) {
-		this.teacherCourses = teacherCourses;
-	}
 }

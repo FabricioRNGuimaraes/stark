@@ -2,9 +2,9 @@ package stark.dao;
 
 import java.util.List;
 
-import stark.entity.AbstractEntity;
+import stark.entity.GenericEntity;
 
-public interface IGenericDAO<T extends AbstractEntity> {
+public interface IGenericDAO<T extends GenericEntity> {
 
 	boolean save(T entity);
 	boolean remove(T entity);

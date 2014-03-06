@@ -1,3 +1,16 @@
+.ui-layout-north .ui-layout-unit-content {
+    overflow: visible !important;
+}
+
+.ui-layout-north {
+    z-index: 30 !important;
+    overflow: visible !important;
+}
+
+.ui-panelgrid td {
+	border-style: hidden !important;
+}
+
 .ui-picklist .ui-picklist-list {
 	height: 100px !important;
 }
@@ -30,35 +43,27 @@
 	background: url(../images/login.png) 0 0 no-repeat !important;
 }
 
+.starIcon {
+	background: url(../images/star.png) 0 0 no-repeat !important;
+}
+
 .logoutIcon {
 	background: url(../images/logout.png) 0 0 no-repeat !important;
 }
 
-.ui-icon-alert {
-	background: url(../images/eraser.png) 0 0 no-repeat !important;
+.studentIcon {
+	background: url(../images/student.png) 0 0 no-repeat !important;
 }
 
-.ui-inputText-stark {
-	width: 98%;
+.teacherIcon {
+	background: url(../images/teacher.png) 0 0 no-repeat !important;
 }
 
-.ui-panelGrid-stark {
-	width: 100%;
-}
-
-.ui-selectOneMenu-stark {
-	width: 98%;
+.scheduleIcon {
+	background: url(../images/schedule.png) 0 0 no-repeat !important;
 }
 
 .ui-button-panelGrid {
 	width: 20px;
 	height: 20px;	
-}
-
-RED {
-	background-color: #FF0000;
-}
-
-GREEN {
-	background-color: #00FF00;
 }

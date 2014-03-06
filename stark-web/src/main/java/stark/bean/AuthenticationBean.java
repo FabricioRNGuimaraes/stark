@@ -2,10 +2,14 @@ package stark.bean;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
+import javax.inject.Named;
 
-@ManagedBean(name="authenticationBean")
-@SessionScoped
+import org.springframework.context.annotation.Scope;
+
+//@ManagedBean(name="authenticationBean")
+//@SessionScoped
+@Named(value="authenticationBean")
+@Scope("session")
 public class AuthenticationBean extends GenericBean {
 
 	private static final long serialVersionUID = 1L;
@@ -34,8 +38,8 @@ public class AuthenticationBean extends GenericBean {
 
 	public String logout() {
 		
-//		getSession().invalidate();
-//		getFacesContext().getExternalContext().invalidateSession();
+		getSession().invalidate();
+		getFacesContext().getExternalContext().invalidateSession();
 		
 		return "logoutSuccess";
 	}

@@ -19,7 +19,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="STUDENT")
-public class Student extends AbstractEntity {
+public class Student extends GenericEntity {
 
 	private static final long serialVersionUID = 1L;
 
@@ -32,30 +32,14 @@ public class Student extends AbstractEntity {
 	@Column(name="name_student", nullable=false, length=100)
 	private String name;
 
-	@Column(name="phone", length=10)
-	private String phone;
-
-//	@DateTimeFormat(style = "S-")
-//	@Temporal(TemporalType.DATE)
-	@Column(name="dt_register", nullable=false)
-	private Date dtRegister;
+////	@DateTimeFormat(style = "S-")
+////	@Temporal(TemporalType.DATE)
+//	@Column(name="dt_register", nullable=false)
+//	private Date dtRegister;
 	
-	@Column(name="cpf", length=11)
-	private String cpf;
-
 	@Column(name="fl_active", nullable=false)
-	private Boolean active;
+	private Boolean active = true;
 
-	@OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	@JoinColumn(name="address", referencedColumnName="id_address")
-	private Address address;
-	
-	@OneToMany(mappedBy="student", cascade=CascadeType.ALL)
-	private List<StudentCourse> studentCourses;
-	
-	@Column(name="email", length=50)
-	private String email;
-	
 	public Integer getId() {
 		return id;
 	}
@@ -72,22 +56,6 @@ public class Student extends AbstractEntity {
 		this.name = name;
 	}
 
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public String getCpf() {
-		return cpf;
-	}
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-
 	public Boolean getActive() {
 		return active;
 	}
@@ -96,35 +64,29 @@ public class Student extends AbstractEntity {
 		this.active = active;
 	}
 
-	public Address getAddress() {
-		return address;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
 	}
 
-	public void setAddress(Address address) {
-		this.address = address;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Student other = (Student) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Date getDtRegister() {
-		return dtRegister;
-	}
-
-	public void setDtRegister(Date dtRegister) {
-		this.dtRegister = dtRegister;
-	}
-
-	public List<StudentCourse> getStudentCourses() {
-		return studentCourses;
-	}
-
-	public void setStudentCourses(List<StudentCourse> studentCourses) {
-		this.studentCourses = studentCourses;
-	}
 }

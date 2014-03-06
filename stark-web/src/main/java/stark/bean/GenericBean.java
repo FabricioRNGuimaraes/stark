@@ -6,10 +6,10 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.primefaces.context.RequestContext;
-
-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 
 public abstract class GenericBean implements Serializable {
 	
@@ -38,7 +38,7 @@ public abstract class GenericBean implements Serializable {
 		return facesMessage;
 	}
 
-	private FacesContext getFacesContext() { 
+	protected FacesContext getFacesContext() { 
 		return FacesContext.getCurrentInstance(); 
 	}
 	
@@ -51,17 +51,17 @@ public abstract class GenericBean implements Serializable {
 //		return s;
 //	}
 //	
-//	protected HttpServletRequest getHttpRequest(){
-//		HttpServletRequest request  = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-//		return request;
-//	}
+	protected HttpServletRequest getHttpRequest(){
+		HttpServletRequest request  = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		return request;
+	}
 //	
 //	protected HttpServletResponse getHttpResponse(){
 //		HttpServletResponse response  = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 //		return response;
 //	}
 //	
-//	protected HttpSession getSession(){
-//		return getHttpRequest().getSession();
-//	}	
+	protected HttpSession getSession(){
+		return getHttpRequest().getSession();
+	}	
 }

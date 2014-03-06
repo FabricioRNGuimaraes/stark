@@ -1,8 +1,11 @@
 package stark.dao;
 
+import javax.inject.Named;
+
 import stark.entity.ClassRoom;
 
-public class ClassRoomDAO extends GenericDAOImpl<ClassRoom>  {
+@Named
+public class ClassRoomDAO extends GenericDAO<ClassRoom> implements IClassRoomDAO {
 
 	private static final long serialVersionUID = 1L;
 

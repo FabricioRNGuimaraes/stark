@@ -1,10 +1,11 @@
 package stark.dao;
 
-import java.util.List;
+import javax.inject.Named;
 
 import stark.entity.Student;
 
-public class StudentDAO extends GenericDAOImpl<Student> {
+@Named
+public class StudentDAO extends GenericDAO<Student> implements IStudentDAO {
 
 	private static final long serialVersionUID = 1L;
 

@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="CLASS_ROOM")
-public class ClassRoom extends AbstractEntity {
+public class ClassRoom extends GenericEntity {
 
 	private static final long serialVersionUID = 1L;
 
@@ -23,12 +23,6 @@ public class ClassRoom extends AbstractEntity {
 	@Column(name="description", nullable=false, length=50)
 	private String description;
 
-	@Column(name="color", length=10)
-	private String color;
-	
-	@Column(name="fl_active", nullable=false)
-	private Boolean active;
-	
 	public Integer getId() {
 		return id;
 	}
@@ -43,22 +37,6 @@ public class ClassRoom extends AbstractEntity {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-
-	public String getColor() {
-		return color;
-	}
-
-	public void setColor(String color) {
-		this.color = color;
 	}
 
 }

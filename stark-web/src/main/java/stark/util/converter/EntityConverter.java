@@ -8,7 +8,7 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 
-import stark.entity.AbstractEntity;
+import stark.entity.GenericEntity;
 
 @FacesConverter(value="entityConverter")
 public class EntityConverter implements Converter {

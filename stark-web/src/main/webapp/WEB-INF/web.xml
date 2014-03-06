@@ -9,6 +9,14 @@
 		<welcome-file>stark.html</welcome-file>
 	</welcome-file-list>
 
+ 	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  	</listener>
+  	
+  	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+  	</listener>
+
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
@@ -32,7 +40,7 @@
 
 	<context-param>
 		<param-name>primefaces.THEME</param-name>
-		<param-value>#{applicationBean.primefacesTheme}</param-value>
+		<param-value>bluesky</param-value>
 	</context-param>
 	
 	<filter>
@@ -49,21 +57,4 @@
 		<filter-name>Security Filter</filter-name>
 		<url-pattern>/template.xhtml</url-pattern>
 	</filter-mapping>
-	
-<!-- 	<error-page> -->
-<!-- 		<exception-type>java.lang.Exception</exception-type> -->
-<!-- 		<location>/exceptionPage.xhtml</location> -->
-<!-- 	</error-page> -->
-	
-<!-- 	<error-page> -->
-<!--    	 	<error-code>404</error-code> -->
-<!--     	<location>/errorPage.xhtml</location> -->
-<!-- 	</error-page> -->
-
-<!-- 	<listener> -->
-<!-- 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class> -->
-<!-- 	</listener> -->
-<!-- 	<listener> -->
-<!-- 		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class> -->
-<!-- 	</listener> -->
 </web-app>

@@ -17,7 +17,7 @@ public class DoubleConverter implements Converter {
 	@Override
 	public String getAsString(FacesContext context, UIComponent component, Object value) {
 
-		if(value != null) {
+		if(value != null && !value.toString().isEmpty()) {
 
 			String[] values = value.toString().split("\\.");
 
